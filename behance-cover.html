@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Behance Cover — Abeer Abdallah Jama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:  #0E4A8A;
+    --gold:  #C9A84C;
+    --white: #FFFFFF;
+    --light: #F5F5F5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 20px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .label {
+    color: #666;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    align-self: flex-start;
+    margin-left: calc(50% - 700px);
+  }
+
+  /* ─── COVER BANNER 1400 × 425 ─── */
+  .cover {
+    width: 1400px;
+    height: 425px;
+    background-color: var(--blue);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 72px;
+  }
+
+  /* decorative gold blobs */
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: .18;
+    right: -140px;
+    top: -160px;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: .12;
+    left: -80px;
+    bottom: -120px;
+  }
+
+  .cover-left {
+    position: relative;
+    z-index: 2;
+  }
+
+  .cover-role {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .cover-name {
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .cover-name span {
+    color: var(--gold);
+  }
+
+  .cover-tagline {
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.5px;
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .cover-right {
+    position: relative;
+    z-index: 2;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cover-contact {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.3px;
+  }
+  .cover-contact strong {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .cover-divider {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin-left: auto;
+    margin-bottom: 4px;
+  }
+
+  /* skill pills */
+  .cover-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 8px;
+    max-width: 340px;
+  }
+  .pill {
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 2px;
+  }
+
+  /* ─── ABOUT SECTION 1400 × auto ─── */
+  .about {
+    width: 1400px;
+    background: var(--white);
+    padding: 64px 72px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 72px;
+    align-items: start;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .about-heading {
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--blue);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .about-heading span {
+    color: var(--gold);
+  }
+
+  .about-body {
+    font-size: 15px;
+    font-weight: 400;
+    color: #444;
+    line-height: 1.8;
+    margin-top: 24px;
+  }
+
+  .about-right {}
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .skill-item {
+    border-left: 3px solid var(--gold);
+    padding-left: 12px;
+  }
+
+  .skill-item .skill-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .skill-item .skill-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  /* ─── TOOLS STRIP ─── */
+  .tools-strip {
+    width: 1400px;
+    background: var(--blue);
+    padding: 40px 72px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .tools-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    min-width: 100px;
+  }
+
+  .tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .tool-tag {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 8px 20px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ─── PROJECT COVER TEMPLATE ─── */
+  .project-cover {
+    width: 1400px;
+    height: 800px;
+    background: var(--blue);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 72px;
+  }
+
+  .project-cover .bg-text {
+    position: absolute;
+    top: -30px;
+    left: -20px;
+    font-size: 280px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -10px;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .project-cover .gold-bar {
+    width: 60px;
+    height: 5px;
+    background: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .project-cover .proj-cat {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .project-cover .proj-title {
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+  .project-cover .proj-desc {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
+  .project-cover .proj-year {
+    position: absolute;
+    top: 56px;
+    right: 72px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ─── THUMBNAIL 808 × 808 ─── */
+  .thumb-row {
+    width: 1400px;
+    display: flex;
+    gap: 24px;
+  }
+
+  .thumb {
+    flex: 1;
+    height: 500px;
+    background: var(--blue);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+  }
+
+  .thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(14,74,138,.9) 0%, transparent 60%);
+  }
+
+  .thumb-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .thumb-cat {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .thumb-title {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--white);
+    text-transform: uppercase;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="label">BEHANCE COVER BANNER — 1400 × 425px</div>
+
+  <!-- ── COVER ── -->
+  <div class="cover">
+    <div class="cover-left">
+      <div class="cover-role">Jr. Graphic Designer</div>
+      <div class="cover-name">Abeer<br><span>Abdallah</span></div>
+      <div class="cover-tagline">
+        Creating bold visuals that communicate ideas with clarity,<br>
+        purpose, and a strong sense of identity.
+      </div>
+    </div>
+    <div class="cover-right">
+      <div class="cover-divider"></div>
+      <div class="cover-contact"><strong>Email</strong> &nbsp;abeerabdallah091@gmail.com</div>
+      <div class="cover-contact"><strong>Phone</strong> &nbsp;+965 99575094</div>
+      <div class="cover-contact"><strong>Location</strong> &nbsp;Kuwait</div>
+      <div class="cover-contact"><strong>Instagram</strong> &nbsp;@adesigner112</div>
+      <div class="cover-skills">
+        <span class="pill">Branding</span>
+        <span class="pill">Social Media</span>
+        <span class="pill">Automotive</span>
+        <span class="pill">Typography</span>
+        <span class="pill">Product Viz</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="label">ABOUT SECTION</div>
+
+  <!-- ── ABOUT ── -->
+  <div class="about">
+    <div class="about-left">
+      <div class="section-tag">About Me</div>
+      <div class="about-heading">Design<br>with <span>Purpose.</span></div>
+      <div class="about-body">
+        I'm a self-taught graphic designer with a strong foundation in the Adobe Creative Suite
+        and nearly 2 years of hands-on experience crafting visuals for social media, advertising
+        campaigns, and brand identity. My work spans automotive compositing, luxury product
+        visualization, and Arabic typography — always driven by a commitment to clarity,
+        balance, and emotional impact.
+        <br><br>
+        Whether it's a high-energy campaign for a food delivery app or a refined fragrance
+        shoot, I bring the same obsession for detail to every project from first concept
+        through final delivery.
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="section-tag">Skills &amp; Expertise</div>
+      <div class="skills-grid">
+        <div class="skill-item">
+          <div class="skill-name">Concept Development</div>
+          <div class="skill-sub">Idea to execution</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Brand Identity</div>
+          <div class="skill-sub">Guidelines & systems</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Social Media Design</div>
+          <div class="skill-sub">Posts, reels, stories</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Product Visualization</div>
+          <div class="skill-sub">Luxury & automotive</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Arabic Typography</div>
+          <div class="skill-sub">Bilingual layouts</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Color &amp; Typography</div>
+          <div class="skill-sub">Theory & application</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Layout &amp; Composition</div>
+          <div class="skill-sub">Print & digital</div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name">Visual Storytelling</div>
+          <div class="skill-sub">Motion & perspective</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOOLS ── -->
+  <div class="tools-strip">
+    <div class="tools-label">Tools</div>
+    <div class="tools-list">
+      <span class="tool-tag">Photoshop</span>
+      <span class="tool-tag">Illustrator</span>
+      <span class="tool-tag">InDesign</span>
+      <span class="tool-tag">Canva</span>
+      <span class="tool-tag">Premiere (Basic)</span>
+      <span class="tool-tag">AI Design Tools</span>
+    </div>
+  </div>
+
+  <div class="label">PROJECT COVER TEMPLATE — 1400 × 800px (duplicate &amp; customise per project)</div>
+
+  <!-- ── PROJECT COVER ── -->
+  <div class="project-cover">
+    <div class="bg-text">SOCIAL</div>
+    <div class="proj-year">2025</div>
+    <div class="gold-bar"></div>
+    <div class="proj-cat">Social Media Design</div>
+    <div class="proj-title">Delivery<br>Brands.</div>
+    <div class="proj-desc">
+      Campaign visuals for Jahez, Talabat &amp; Keeta — bold Arabic typography,
+      dynamic compositions, and on-brand colour systems.
+    </div>
+  </div>
+
+  <!-- PROJECT COVER 2 -->
+  <div class="project-cover" style="background:#111;">
+    <div class="bg-text" style="color:rgba(255,255,255,0.03);">AUTO</div>
+    <div class="proj-year">2025</div>
+    <div class="gold-bar"></div>
+    <div class="proj-cat">Automotive Compositing</div>
+    <div class="proj-title">Drive the<br>Future.</div>
+    <div class="proj-desc">
+      Cinematic automotive visuals for BMW, Porsche &amp; Kia —
+      blending lighting, colour, and environment for maximum impact.
+    </div>
+  </div>
+
+  <!-- PROJECT COVER 3 -->
+  <div class="project-cover" style="background:#0a0a0a;">
+    <div class="bg-text" style="color:rgba(255,255,255,0.03);">LUXURY</div>
+    <div class="proj-year">2025</div>
+    <div class="gold-bar"></div>
+    <div class="proj-cat">Product Visualization</div>
+    <div class="proj-title">Scent &amp;<br>Light.</div>
+    <div class="proj-desc">
+      Studio-style fragrance photography for Dior Sauvage, Tom Ford &amp; Vertus —
+      using Photoshop lighting to create a refined, premium presence.
+    </div>
+  </div>
+
+  <div class="label">PROJECT THUMBNAIL GRID — use for Behance project covers (808 × 808px crop)</div>
+
+  <!-- ── THUMBNAILS ── -->
+  <div class="thumb-row">
+    <div class="thumb" style="background: linear-gradient(135deg, #0E4A8A 0%, #0a3060 100%);">
+      <div class="thumb-content">
+        <div class="thumb-cat">Social Media</div>
+        <div class="thumb-title">Delivery<br>Brands</div>
+      </div>
+    </div>
+    <div class="thumb" style="background: linear-gradient(135deg, #111 0%, #222 100%);">
+      <div class="thumb-content">
+        <div class="thumb-cat">Automotive</div>
+        <div class="thumb-title">Drive the<br>Future</div>
+      </div>
+    </div>
+    <div class="thumb" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);">
+      <div class="thumb-content">
+        <div class="thumb-cat">Product Viz</div>
+        <div class="thumb-title">Scent &amp;<br>Light</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

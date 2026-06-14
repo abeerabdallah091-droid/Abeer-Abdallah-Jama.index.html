@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Armani — Stronger With You Intensely | Aura Perfumes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Bebas+Neue&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+    }
+
+    .viewport-wrapper {
+      width: min(100vw, calc(100vh * 9 / 16));
+      aspect-ratio: 9 / 16;
+      position: relative;
+    }
+
+    .ad {
+      width: 1080px;
+      height: 1920px;
+      transform-origin: top left;
+      position: absolute;
+      top: 0; left: 0;
+      overflow: hidden;
+      background: #07060A;
+    }
+
+    /* ── Background layers ── */
+    .bg-deep {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 52%, rgba(140, 75, 15, 0.32) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 35% at 50% 52%, rgba(190, 105, 20, 0.22) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 40% at 50% 100%, rgba(80, 40, 5, 0.4) 0%, transparent 60%);
+    }
+
+    /* ── Particles canvas ── */
+    #particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Glow behind bottle ── */
+    .bottle-glow {
+      position: absolute;
+      width: 620px;
+      height: 700px;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse at center, rgba(185, 105, 22, 0.38) 0%, rgba(140, 70, 10, 0.15) 40%, transparent 70%);
+      animation: glowPulse 4s ease-in-out infinite;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.75; transform: translate(-50%, -50%) scale(1); }
+      50%       { opacity: 1;    transform: translate(-50%, -50%) scale(1.06); }
+    }
+
+    /* ── Bottle wrapper ── */
+    .bottle-wrap {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%) translateY(60px);
+      opacity: 0;
+      animation: bottleRise 2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+      z-index: 3;
+    }
+
+    @keyframes bottleRise {
+      to { transform: translate(-50%, -50%) translateY(0); opacity: 1; }
+    }
+
+    /* ── Smoke ── */
+    .smoke-l, .smoke-r, .smoke-c {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .smoke-c {
+      width: 380px; height: 120px;
+      left: 50%; bottom: 470px;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at center bottom, rgba(200,140,60,0.13) 0%, transparent 70%);
+      animation: smokeC 5s ease-in-out 1.5s infinite;
+    }
+
+    .smoke-l {
+      width: 200px; height: 80px;
+      left: calc(50% - 160px); bottom: 490px;
+      background: radial-gradient(ellipse at center bottom, rgba(180,120,40,0.1) 0%, transparent 70%);
+      animation: smokeL 6s ease-in-out 2s infinite;
+    }
+
+    .smoke-r {
+      width: 200px; height: 80px;
+      left: calc(50% + 40px); bottom: 490px;
+      background: radial-gradient(ellipse at center bottom, rgba(180,120,40,0.1) 0%, transparent 70%);
+      animation: smokeR 6.5s ease-in-out 2.5s infinite;
+    }
+
+    @keyframes smokeC {
+      0%   { opacity: 0; transform: translateX(-50%) scaleX(0.7) translateY(15px); }
+      40%  { opacity: 1; }
+      100% { opacity: 0; transform: translateX(-50%) scaleX(1.3) translateY(-50px); }
+    }
+    @keyframes smokeL {
+      0%   { opacity: 0; transform: scaleX(0.7) translateY(10px) rotate(-5deg); }
+      40%  { opacity: 0.8; }
+      100% { opacity: 0; transform: scaleX(1.2) translateY(-45px) rotate(-12deg); }
+    }
+    @keyframes smokeR {
+      0%   { opacity: 0; transform: scaleX(0.7) translateY(10px) rotate(5deg); }
+      40%  { opacity: 0.8; }
+      100% { opacity: 0; transform: scaleX(1.2) translateY(-45px) rotate(12deg); }
+    }
+
+    /* ── Brand top ── */
+    .brand-top {
+      position: absolute;
+      top: 110px;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 5;
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.2s forwards;
+    }
+
+    .brand-house {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 26px;
+      letter-spacing: 14px;
+      color: rgba(245, 228, 195, 0.55);
+      text-transform: uppercase;
+    }
+
+    .brand-rule {
+      width: 56px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(201,168,76,0.6), transparent);
+      margin: 18px auto;
+    }
+
+    .brand-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      letter-spacing: 8px;
+      color: rgba(201, 168, 76, 0.45);
+      text-transform: uppercase;
+    }
+
+    /* ── Bottom text ── */
+    .text-bottom {
+      position: absolute;
+      bottom: 120px;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 5;
+      opacity: 0;
+      animation: fadeUp 1.2s ease 1.8s forwards;
+      padding: 0 60px;
+    }
+
+    .fragrance-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 96px;
+      line-height: 0.92;
+      color: #F5E6CC;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+    }
+
+    .fragrance-rule {
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(201,168,76,0.8), transparent);
+      margin: 20px auto;
+    }
+
+    .fragrance-sub {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      color: #C9A84C;
+      letter-spacing: 10px;
+    }
+
+    .fragrance-notes {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 20px;
+      letter-spacing: 5px;
+      color: rgba(245, 228, 195, 0.38);
+      margin-top: 18px;
+      text-transform: uppercase;
+    }
+
+    .aura-divider {
+      width: 200px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
+      margin: 28px auto 18px;
+    }
+
+    .aura-tag {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 8px;
+      color: rgba(201, 168, 76, 0.6);
+    }
+
+    /* ── Light sweep ── */
+    .sweep {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        120deg,
+        transparent 30%,
+        rgba(255, 215, 130, 0.055) 48%,
+        rgba(255, 215, 130, 0.09) 50%,
+        rgba(255, 215, 130, 0.055) 52%,
+        transparent 70%
+      );
+      background-size: 250% 100%;
+      animation: sweep 7s ease-in-out 3s infinite;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    @keyframes sweep {
+      0%   { background-position: 200% 0; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { background-position: -200% 0; opacity: 0; }
+    }
+
+    /* ── Vignette ── */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.65) 100%);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport-wrapper" id="wrapper">
+    <div class="ad" id="ad">
+
+      <div class="bg-deep"></div>
+      <canvas id="particles"></canvas>
+      <div class="bottle-glow"></div>
+
+      <!-- Brand top -->
+      <div class="brand-top">
+        <div class="brand-house">Giorgio Armani</div>
+        <div class="brand-rule"></div>
+        <div class="brand-sub">Eau de Parfum</div>
+      </div>
+
+      <!-- SVG Bottle -->
+      <div class="bottle-wrap">
+        <svg width="360" height="600" viewBox="0 0 360 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Chrome cap -->
+            <linearGradient id="capG" x1="130" y1="0" x2="230" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#B0B0B0"/>
+              <stop offset="30%"  stop-color="#E8E8E8"/>
+              <stop offset="55%"  stop-color="#F5F5F5"/>
+              <stop offset="80%"  stop-color="#C0C0C0"/>
+              <stop offset="100%" stop-color="#909090"/>
+            </linearGradient>
+            <linearGradient id="capRingG" x1="130" y1="0" x2="230" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#A0A0A0"/>
+              <stop offset="50%"  stop-color="#D8D8D8"/>
+              <stop offset="100%" stop-color="#909090"/>
+            </linearGradient>
+            <!-- Neck -->
+            <linearGradient id="neckG" x1="148" y1="0" x2="212" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#7A4E18"/>
+              <stop offset="40%"  stop-color="#C07828"/>
+              <stop offset="100%" stop-color="#6A4210"/>
+            </linearGradient>
+            <!-- Bottle body - warm amber glass -->
+            <linearGradient id="bodyG" x1="55" y1="130" x2="305" y2="560" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C88030"/>
+              <stop offset="20%"  stop-color="#D89038"/>
+              <stop offset="45%"  stop-color="#B87028"/>
+              <stop offset="70%"  stop-color="#A05E20"/>
+              <stop offset="100%" stop-color="#8A4E18"/>
+            </linearGradient>
+            <!-- Left edge highlight -->
+            <linearGradient id="hlG" x1="0" y1="130" x2="0" y2="555" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
+              <stop offset="30%"  stop-color="rgba(255,255,255,0.25)"/>
+              <stop offset="70%"  stop-color="rgba(255,255,255,0.08)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+            <!-- Right inner shadow -->
+            <linearGradient id="shadowG" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+              <stop offset="0%"   stop-color="rgba(0,0,0,0)"/>
+              <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
+            </linearGradient>
+            <!-- Label band -->
+            <linearGradient id="labelG" x1="55" y1="280" x2="55" y2="425" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="rgba(6,5,3,0.88)"/>
+              <stop offset="50%"  stop-color="rgba(8,6,3,0.94)"/>
+              <stop offset="100%" stop-color="rgba(6,5,3,0.88)"/>
+            </linearGradient>
+            <!-- Base -->
+            <linearGradient id="baseG" x1="55" y1="0" x2="305" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#6A4210"/>
+              <stop offset="50%"  stop-color="#9A6020"/>
+              <stop offset="100%" stop-color="#5A3808"/>
+            </linearGradient>
+            <!-- Reflection -->
+            <linearGradient id="reflG" x1="0" y1="560" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#B07028" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#B07028" stop-opacity="0"/>
+            </linearGradient>
+            <!-- Top shine ellipse -->
+            <radialGradient id="shineG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="rgba(255,220,140,0.35)"/>
+              <stop offset="100%" stop-color="rgba(255,220,140,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Cap body -->
+          <rect x="128" y="2" width="104" height="64" rx="5" fill="url(#capG)"/>
+          <!-- Cap bottom ring -->
+          <rect x="134" y="62" width="92" height="18" rx="3" fill="url(#capRingG)"/>
+          <!-- Cap top highlight line -->
+          <rect x="136" y="5" width="12" height="56" rx="6" fill="rgba(255,255,255,0.22)" opacity="0.7"/>
+
+          <!-- Neck -->
+          <rect x="152" y="80" width="56" height="50" rx="4" fill="url(#neckG)"/>
+          <rect x="156" y="82" width="8" height="46" rx="4" fill="rgba(255,255,255,0.15)" opacity="0.6"/>
+
+          <!-- Bottle body -->
+          <rect x="55"  y="130" width="250" height="428" rx="14" fill="url(#bodyG)"/>
+
+          <!-- Right inner shadow -->
+          <rect x="55" y="130" width="250" height="428" rx="14" fill="url(#shadowG)" opacity="0.5"/>
+
+          <!-- Left highlight -->
+          <rect x="64"  y="140" width="22"  height="408" rx="11" fill="url(#hlG)"/>
+
+          <!-- Top bottle shine -->
+          <ellipse cx="180" cy="135" rx="100" ry="10" fill="url(#shineG)"/>
+
+          <!-- Label band -->
+          <rect x="55" y="280" width="250" height="145" rx="0" fill="url(#labelG)"/>
+          <!-- Label top / bottom thin gold rules -->
+          <line x1="75"  y1="284" x2="285" y2="284" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <line x1="75"  y1="421" x2="285" y2="421" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+
+          <!-- Label text -->
+          <text x="180" y="330" font-family="'Georgia', serif" font-size="13" font-weight="400" fill="rgba(245,228,195,0.55)" text-anchor="middle" letter-spacing="6">GIORGIO</text>
+          <text x="180" y="356" font-family="'Georgia', serif" font-size="30" font-weight="700" fill="#F5E6CC" text-anchor="middle" letter-spacing="7">ARMANI</text>
+          <line x1="90" y1="368" x2="270" y2="368" stroke="rgba(245,228,195,0.2)" stroke-width="0.6"/>
+          <text x="180" y="390" font-family="'Georgia', serif" font-size="11" fill="rgba(245,228,195,0.6)" text-anchor="middle" letter-spacing="3">STRONGER WITH YOU</text>
+          <text x="180" y="411" font-family="'Georgia', serif" font-size="11" fill="#C9A84C" text-anchor="middle" letter-spacing="5">INTENSELY</text>
+
+          <!-- Base bar -->
+          <rect x="55" y="546" width="250" height="12" rx="6" fill="url(#baseG)"/>
+
+          <!-- Ground reflection -->
+          <rect x="55" y="559" width="250" height="41" fill="url(#reflG)"/>
+
+          <!-- Bottom bottle right inner shadow corner -->
+          <rect x="285" y="130" width="20" height="428" rx="0" fill="rgba(0,0,0,0.18)" opacity="0.7"/>
+        </svg>
+      </div>
+
+      <!-- Smoke effects -->
+      <div class="smoke-l"></div>
+      <div class="smoke-r"></div>
+      <div class="smoke-c"></div>
+
+      <!-- Bottom text -->
+      <div class="text-bottom">
+        <div class="fragrance-name">Stronger<br>With You</div>
+        <div class="fragrance-rule"></div>
+        <div class="fragrance-sub">Intensely</div>
+        <div class="fragrance-notes">Warm · Spicy · Magnetic</div>
+        <div class="aura-divider"></div>
+        <div class="aura-tag">Aura Perfumes · Hargeisa</div>
+      </div>
+
+      <!-- Vignette + sweep -->
+      <div class="vignette"></div>
+      <div class="sweep"></div>
+
+    </div>
+  </div>
+
+  <script>
+    // Scale to viewport
+    function scaleAd() {
+      const wrapper = document.getElementById('wrapper');
+      const ad = document.getElementById('ad');
+      const scale = wrapper.offsetWidth / 1080;
+      ad.style.transform = `scale(${scale})`;
+      wrapper.style.height = (1920 * scale) + 'px';
+    }
+    scaleAd();
+    window.addEventListener('resize', scaleAd);
+
+    // Gold particle system
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1080;
+    canvas.height = 1920;
+
+    const pts = Array.from({ length: 70 }, () => ({
+      x:       Math.random() * 1080,
+      y:       600 + Math.random() * 900,
+      r:       Math.random() * 2.2 + 0.4,
+      vy:      Math.random() * 0.5 + 0.15,
+      vx:      (Math.random() - 0.5) * 0.25,
+      alpha:   Math.random() * 0.45 + 0.08,
+      flicker: Math.random() * Math.PI * 2
+    }));
+
+    function tick() {
+      ctx.clearRect(0, 0, 1080, 1920);
+      pts.forEach(p => {
+        p.flicker += 0.035;
+        const a = p.alpha * (0.7 + 0.3 * Math.sin(p.flicker));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,168,76,${a})`;
+        ctx.fill();
+        p.y  -= p.vy;
+        p.x  += p.vx;
+        if (p.y < 80)              { p.y = 1850; p.x = Math.random() * 1080; }
+        if (p.x < 0 || p.x > 1080) p.vx *= -1;
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  </script>
+</body>
+</html>

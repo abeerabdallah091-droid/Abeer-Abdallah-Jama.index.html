@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asli Mills — Ancient Wisdom, Distilled.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-950: #071A0E;
+      --green-900: #0D2B1A;
+      --green-800: #1B4332;
+      --green-700: #2D6A4F;
+      --green-400: #52B788;
+      --gold:      #C9963A;
+      --gold-dim:  #9A7028;
+      --ease-out:  cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-io:   cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    html, body {
+      width: 100%; min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--green-950);
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── BACKGROUND LAYERS ──────────────────────────── */
+    .bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 85%, rgba(45,106,79,0.55) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 40% at 10% 10%, rgba(201,150,58,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 35% at 90% 90%, rgba(13,43,26,0.8) 0%, transparent 60%),
+        linear-gradient(155deg, #0A1F12 0%, #1B4332 45%, #0D2B1A 75%, #071A0E 100%);
+    }
+
+    /* Animated aurora orb */
+    .bg-orb {
+      position: fixed; z-index: 0; pointer-events: none;
+      width: 700px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(82,183,136,0.18) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -40%);
+      animation: orbPulse 8s ease-in-out infinite alternate;
+      filter: blur(40px);
+    }
+
+    @keyframes orbPulse {
+      from { transform: translate(-50%, -40%) scale(1);   opacity: 0.7; }
+      to   { transform: translate(-50%, -45%) scale(1.15); opacity: 1;   }
+    }
+
+    /* Grain texture via SVG filter */
+    .bg-grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Botanical leaf shapes */
+    .leaf { position: fixed; pointer-events: none; }
+
+    /* ── MAIN LAYOUT ────────────────────────────────── */
+    .showcase {
+      position: relative; z-index: 2;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 64px 24px 80px;
+      gap: 52px;
+    }
+
+    /* ── HEADER ─────────────────────────────────────── */
+    .header {
+      text-align: center;
+      opacity: 0; transform: translateY(28px);
+      animation: fadeUp 900ms var(--ease-out) 100ms both;
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: ''; display: block;
+      width: 36px; height: 1px;
+      background: var(--gold); opacity: 0.55;
+    }
+
+    .headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(48px, 7.5vw, 100px);
+      font-weight: 900; line-height: 0.95;
+      letter-spacing: -2.5px; color: #fff;
+    }
+    .headline em {
+      font-style: italic;
+      color: var(--green-400);
+      display: block; margin-top: 4px;
+    }
+
+    .subline {
+      margin-top: 22px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 400;
+      color: rgba(255,255,255,0.42);
+      letter-spacing: 0.04em;
+    }
+    .subline b { color: rgba(255,255,255,0.65); font-weight: 500; }
+    .sep { margin: 0 10px; opacity: 0.25; }
+
+    /* ── PHONES STAGE ───────────────────────────────── */
+    .phones-stage {
+      position: relative;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+
+    /* Each slot holds rotation + z-index permanently */
+    .phone-slot {
+      position: relative; flex-shrink: 0;
+    }
+    .phone-slot:nth-child(1) { transform: rotate(-15deg); z-index: 1; margin-right: -28px; }
+    .phone-slot:nth-child(2) { transform: rotate(3deg);   z-index: 3; }
+    .phone-slot:nth-child(3) { transform: rotate(13deg);  z-index: 2; margin-left: -28px; }
+
+    /* Entrance wrapper — animates in, then stays visible */
+    .phone-enter {
+      opacity: 0;
+      animation: phoneEnter 1000ms var(--ease-out) both;
+    }
+    .phone-slot:nth-child(1) .phone-enter { animation-delay: 350ms; }
+    .phone-slot:nth-child(2) .phone-enter { animation-delay: 520ms; }
+    .phone-slot:nth-child(3) .phone-enter { animation-delay: 690ms; }
+
+    @keyframes phoneEnter {
+      from { opacity: 0; transform: translateY(48px) scale(0.88); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
+    /* Float wrapper — continuous hover animation */
+    .phone-float {
+      animation: float ease-in-out infinite alternate;
+    }
+    .phone-slot:nth-child(1) .phone-float { animation-duration: 6.2s; animation-delay: 0s; }
+    .phone-slot:nth-child(2) .phone-float { animation-duration: 5.1s; animation-delay: -1.8s; }
+    .phone-slot:nth-child(3) .phone-float { animation-duration: 7.0s; animation-delay: -3.4s; }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-16px); }
+    }
+
+    /* The actual phone frame */
+    .phone {
+      width: 212px; height: 445px;
+      border-radius: 38px;
+      background: #fff;
+      box-shadow:
+        0 0 0 9px #1c1c1e,
+        0 0 0 11px #2c2c2e,
+        0 50px 90px rgba(0,0,0,0.55),
+        0 20px 40px rgba(0,0,0,0.3),
+        0 0 60px rgba(82,183,136,0.06);
+      overflow: hidden; position: relative;
+      transition: box-shadow 350ms var(--ease-out);
+    }
+
+    /* Dynamic island */
+    .phone::before {
+      content: '';
+      position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+      width: 76px; height: 22px;
+      background: #1c1c1e; border-radius: 12px; z-index: 10;
+    }
+
+    .phone-slot:hover .phone {
+      box-shadow:
+        0 0 0 9px #1c1c1e,
+        0 0 0 11px #2c2c2e,
+        0 65px 110px rgba(0,0,0,0.65),
+        0 25px 50px rgba(0,0,0,0.4),
+        0 0 80px rgba(82,183,136,0.18);
+    }
+
+    /* Phone screen clipping container */
+    .phone-screen {
+      width: 100%; height: 100%;
+      overflow: hidden; position: relative;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── SHARED PHONE NAV ───────────────────────────── */
+    .pnav {
+      height: 38px; padding-top: 36px; padding-bottom: 0;
+      padding-left: 12px; padding-right: 12px;
+      background: #e8e5d8;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(180,170,145,0.2);
+    }
+    .pnav-logo {
+      width: 22px; height: 22px; background: #1B4332;
+      border-radius: 5px; display: flex; align-items: center; justify-content: center;
+    }
+    .pnav-logo svg { width: 12px; height: 12px; }
+    .pnav-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7.5px; font-weight: 800; color: #1A1A18; letter-spacing: 0.05em;
+    }
+    .pnav-menu { display: flex; flex-direction: column; gap: 3.5px; }
+    .pnav-menu span { display: block; width: 14px; height: 1.5px; background: #1A1A18; border-radius: 2px; }
+
+    /* ── SCREEN 1: PRODUCTS ─────────────────────────── */
+    .s1-hero {
+      display: block; width: 100%; height: 195px;
+      object-fit: cover; object-position: center;
+      background: linear-gradient(135deg, #c8dfc5, #a8cba5);
+    }
+    .s1-body { padding: 11px 12px; }
+    .s1-cat {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #C9963A; margin-bottom: 4px;
+    }
+    .s1-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; font-weight: 900; color: #1A1A18;
+      line-height: 1.15; margin-bottom: 3px;
+    }
+    .s1-sub { font-size: 8px; color: #9C9C9A; margin-bottom: 6px; }
+    .s1-stars { font-size: 11px; color: #C9963A; letter-spacing: 2px; margin-bottom: 11px; }
+    .s1-btn {
+      display: block; width: 100%; padding: 9px;
+      background: #25D366; color: #fff; border-radius: 999px;
+      font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 700;
+      text-align: center; letter-spacing: 0.06em;
+    }
+
+    /* ── SCREEN 2: WHO WE ARE ───────────────────────── */
+    .s2-hero {
+      width: 100%; height: 180px; position: relative;
+      background: linear-gradient(135deg, #b8d8bc, #8fbf93);
+      overflow: hidden;
+    }
+    .s2-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s2-badge {
+      position: absolute; bottom: 9px; right: 9px;
+      background: #1B4332; color: #fff; border-radius: 10px;
+      padding: 7px 10px; text-align: center;
+    }
+    .s2-badge-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px; font-weight: 800; line-height: 1;
+    }
+    .s2-badge-label { font-size: 7px; opacity: 0.75; font-weight: 500; margin-top: 1px; }
+    .s2-body { padding: 10px 12px; }
+    .s2-eye {
+      display: flex; align-items: center; gap: 7px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7.5px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #C9963A; margin-bottom: 5px;
+    }
+    .s2-eye::before { content: ''; width: 18px; height: 2px; background: #C9963A; flex-shrink: 0; }
+    .s2-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 900; color: #1A1A18;
+      margin-bottom: 7px;
+    }
+    .s2-text { font-size: 8px; color: #5C5C5A; line-height: 1.75; }
+
+    /* ── SCREEN 3: PRODUCT DETAIL ───────────────────── */
+    .s3-hero {
+      width: 100%; height: 155px;
+      background: linear-gradient(135deg, #f2e4ce, #e8d5b5);
+      overflow: hidden;
+    }
+    .s3-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s3-back {
+      display: flex; align-items: center; gap: 5px;
+      padding: 8px 12px 0;
+      font-family: 'Montserrat', sans-serif; font-size: 7.5px; font-weight: 600; color: #5C5C5A;
+    }
+    .s3-body { padding: 10px 12px; }
+    .s3-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #9C9C9A; margin-bottom: 3px;
+    }
+    .s3-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 900; color: #1A1A18;
+      line-height: 1.0; letter-spacing: -0.5px; margin-bottom: 3px;
+    }
+    .s3-gold {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #C9963A; margin-bottom: 8px;
+    }
+    .s3-hr { height: 1px; background: #EBEBEA; margin: 6px 0; }
+    .s3-lbl {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #9C9C9A; margin-bottom: 6px;
+    }
+    .s3-desc { font-size: 7.5px; color: #5C5C5A; line-height: 1.75; margin-bottom: 7px; }
+    .s3-benefits { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .s3-benefits li {
+      display: flex; align-items: flex-start; gap: 7px;
+      font-size: 7.5px; color: #3C3C3A; line-height: 1.5;
+    }
+    .s3-benefits li::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: #C9963A; flex-shrink: 0; margin-top: 3px;
+    }
+
+    /* ── CENTER PHONE: HERO SCREEN ─────────────────── */
+    .hero-phone-screen {
+      position: relative; width: 100%; height: 100%;
+      background: #08110a; overflow: hidden;
+    }
+    .hp-blob-1 {
+      position: absolute; width: 180px; height: 180px; border-radius: 50%;
+      filter: blur(45px); pointer-events: none;
+      background: radial-gradient(circle, rgba(45,106,79,.7), transparent 65%);
+      top: -55px; left: -35px;
+      animation: hpb1 18s ease-in-out infinite alternate;
+    }
+    .hp-blob-2 {
+      position: absolute; width: 130px; height: 130px; border-radius: 50%;
+      filter: blur(35px); pointer-events: none;
+      background: radial-gradient(circle, rgba(201,150,58,.25), transparent 65%);
+      bottom: 60px; right: -25px;
+      animation: hpb2 22s ease-in-out infinite alternate;
+    }
+    @keyframes hpb1 { to { transform: translate(14px, 10px); } }
+    @keyframes hpb2 { to { transform: translate(-10px, -8px); } }
+    .hp-img {
+      position: absolute; z-index: 1;
+      width: 100%; height: 58%;
+      object-fit: cover; object-position: center top;
+      display: block;
+    }
+    .hp-overlay {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background:
+        linear-gradient(to top, #08110a 38%, rgba(8,17,10,.55) 62%, rgba(8,17,10,.1) 100%),
+        linear-gradient(to right, rgba(8,17,10,.2), transparent);
+    }
+    .hp-nav {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+      padding: 32px 12px 0; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hp-nav-logo {
+      width: 22px; height: 22px;
+      background: rgba(27,67,50,.9);
+      border: 1px solid rgba(82,183,136,.35);
+      border-radius: 5px; display: flex; align-items: center; justify-content: center;
+    }
+    .hp-nav-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7.5px; font-weight: 800;
+      color: rgba(255,255,255,.92); letter-spacing: .06em;
+    }
+    .hp-nav-menu { display: flex; flex-direction: column; gap: 3.5px; }
+    .hp-nav-menu span { display: block; width: 14px; height: 1.5px; background: rgba(255,255,255,.8); border-radius: 2px; }
+    .hp-copy {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
+      padding: 0 14px 18px;
+    }
+    .hp-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: #C9963A; margin-bottom: 8px;
+    }
+    .hp-badge::before { content: ''; width: 12px; height: 1.5px; background: #C9963A; flex-shrink: 0; }
+    .hp-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px; font-weight: 900; color: #fff;
+      line-height: .92; letter-spacing: -1px; margin-bottom: 10px;
+    }
+    .hp-h1 em { font-style: italic; color: #C9963A; display: block; }
+    .hp-sub { font-size: 7.5px; color: rgba(255,255,255,.6); line-height: 1.7; margin-bottom: 14px; }
+    .hp-cta {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      width: 100%; padding: 9px;
+      background: #25D366; color: #fff; border-radius: 999px;
+      font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 700;
+      letter-spacing: .05em;
+    }
+    .hp-trust { display: flex; align-items: center; justify-content: center; margin-top: 10px; }
+    .hp-trust-item { font-size: 6.5px; font-weight: 600; color: rgba(255,255,255,.4); letter-spacing: .08em; text-transform: uppercase; padding: 0 5px; }
+    .hp-trust-dot { color: rgba(255,255,255,.2); font-size: 8px; }
+
+    /* ── PHONE LABELS ───────────────────────────────── */
+    .phone-label {
+      display: block; text-align: center;
+      margin-top: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8.5px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.28);
+    }
+
+    /* ── CTA ────────────────────────────────────────── */
+    .cta-group {
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      opacity: 0;
+      animation: fadeUp 700ms var(--ease-out) 950ms both;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #25D366; color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 15px 36px; border-radius: 999px;
+      text-decoration: none; border: none; cursor: pointer;
+      box-shadow: 0 8px 36px rgba(37,211,102,0.38);
+      transition:
+        transform 160ms var(--ease-out),
+        box-shadow 160ms var(--ease-out);
+    }
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 48px rgba(37,211,102,0.48);
+    }
+    .cta-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 18px rgba(37,211,102,0.3);
+      transition-duration: 100ms;
+    }
+    .cta-note {
+      font-size: 11.5px; color: rgba(255,255,255,0.3); letter-spacing: 0.04em;
+    }
+
+    /* ── BOTTOM TABS ────────────────────────────────── */
+    .bottom-tabs {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+      display: flex; justify-content: center; gap: 72px;
+      padding: 14px 0 18px;
+      background: linear-gradient(transparent, rgba(7,26,14,0.9));
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeUp 600ms var(--ease-out) 1100ms both;
+    }
+    .tab {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+    }
+
+    /* Bottom shimmer strip */
+    .strip {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 2px; z-index: 11;
+      background: linear-gradient(90deg, #1B4332, #52B788, #C9963A, #52B788, #1B4332);
+      background-size: 300% 100%;
+      animation: shimmer 5s linear infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 300% 0; }
+      100% { background-position: -300% 0; }
+    }
+
+    /* ── SHARED KEYFRAMES ───────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── REDUCED MOTION ─────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-delay: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background layers -->
+  <div class="bg"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-grain"></div>
+
+  <!-- Botanical leaves -->
+  <svg class="leaf" style="top:3%;left:1%;width:200px;opacity:0.055;transform:rotate(-20deg);" viewBox="0 0 200 320" fill="none">
+    <path d="M100 310 C55 220 15 145 38 58 C62 -28 138 -28 162 58 C185 145 145 220 100 310Z" fill="#52B788"/>
+    <line x1="100" y1="310" x2="100" y2="30" stroke="#2D6A4F" stroke-width="2" opacity="0.5"/>
+    <line x1="100" y1="200" x2="65" y2="140" stroke="#2D6A4F" stroke-width="1" opacity="0.4"/>
+    <line x1="100" y1="200" x2="135" y2="140" stroke="#2D6A4F" stroke-width="1" opacity="0.4"/>
+    <line x1="100" y1="150" x2="72" y2="105" stroke="#2D6A4F" stroke-width="1" opacity="0.3"/>
+    <line x1="100" y1="150" x2="128" y2="105" stroke="#2D6A4F" stroke-width="1" opacity="0.3"/>
+  </svg>
+
+  <svg class="leaf" style="bottom:8%;right:2%;width:150px;opacity:0.04;transform:rotate(145deg);" viewBox="0 0 200 320" fill="none">
+    <path d="M100 310 C55 220 15 145 38 58 C62 -28 138 -28 162 58 C185 145 145 220 100 310Z" fill="#52B788"/>
+    <line x1="100" y1="310" x2="100" y2="30" stroke="#2D6A4F" stroke-width="2" opacity="0.5"/>
+  </svg>
+
+  <svg class="leaf" style="top:40%;right:3%;width:100px;opacity:0.035;transform:rotate(70deg);" viewBox="0 0 200 320" fill="none">
+    <path d="M100 310 C55 220 15 145 38 58 C62 -28 138 -28 162 58 C185 145 145 220 100 310Z" fill="#C9963A"/>
+  </svg>
+
+  <svg class="leaf" style="bottom:20%;left:2%;width:80px;opacity:0.04;transform:rotate(-40deg);" viewBox="0 0 200 320" fill="none">
+    <path d="M100 310 C55 220 15 145 38 58 C62 -28 138 -28 162 58 C185 145 145 220 100 310Z" fill="#C9963A"/>
+  </svg>
+
+  <main class="showcase">
+
+    <!-- Headline -->
+    <header class="header">
+      <p class="eyebrow">Asli Mills &mdash; Est. 1998</p>
+      <h1 class="headline">
+        Ancient Wisdom,<em>Distilled.</em>
+      </h1>
+      <p class="subline">
+        <b>100% Organic</b><span class="sep">·</span>
+        Horn of Africa<span class="sep">·</span>
+        <b>25+ Years Trusted</b>
+      </p>
+    </header>
+
+    <!-- Phone trio -->
+    <div class="phones-stage" id="phonesStage">
+
+      <!-- Phone 1 — Products -->
+      <div class="phone-slot">
+        <div class="phone-enter">
+          <div class="phone-float">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="pnav">
+                  <div class="pnav-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+                      <path d="M12 22s-8-6-8-12a8 8 0 0116 0c0 6-8 12-8 12z"/>
+                      <circle cx="12" cy="10" r="2.5" fill="#fff" stroke="none"/>
+                    </svg>
+                  </div>
+                  <span class="pnav-brand">ASLI MILLS</span>
+                  <div class="pnav-menu"><span></span><span></span><span></span></div>
+                </div>
+                <img class="s1-hero"
+                  src="../asli-mills site project/products/product 1.jpg"
+                  alt="Face Mask"
+                  onerror="this.style.background='linear-gradient(135deg,#b8d8bc,#8fbf93)';this.removeAttribute('src')">
+                <div class="s1-body">
+                  <div class="s1-cat">Face Care</div>
+                  <div class="s1-name">Asli Mills<br>Face Mask</div>
+                  <div class="s1-sub">100g &nbsp;·&nbsp; 100% Natural & Organic</div>
+                  <div class="s1-stars">★★★★★</div>
+                  <div class="s1-btn">ORDER VIA WHATSAPP</div>
+                </div>
+              </div>
+            </div>
+            <span class="phone-label">Products</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone 2 — Who We Are -->
+      <div class="phone-slot">
+        <div class="phone-enter">
+          <div class="phone-float">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="hero-phone-screen">
+                  <div class="hp-blob-1"></div>
+                  <div class="hp-blob-2"></div>
+                  <img class="hp-img"
+                    src="../asli-mills site project/products/product 2.jpg"
+                    alt="Asli Mills Natural Products"
+                    onerror="this.style.background='linear-gradient(160deg,#1B4332,#0D2B1A)';this.removeAttribute('src')">
+                  <div class="hp-overlay"></div>
+                  <div class="hp-nav">
+                    <div class="hp-nav-logo">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="12" height="12">
+                        <path d="M12 22s-8-6-8-12a8 8 0 0116 0c0 6-8 12-8 12z"/>
+                        <circle cx="12" cy="10" r="2.5" fill="#fff" stroke="none"/>
+                      </svg>
+                    </div>
+                    <span class="hp-nav-brand">ASLI MILLS</span>
+                    <div class="hp-nav-menu"><span></span><span></span><span></span></div>
+                  </div>
+                  <div class="hp-copy">
+                    <div class="hp-badge">100% Natural &amp; Organic</div>
+                    <div class="hp-h1">Who We<em>Are.</em></div>
+                    <div class="hp-sub">Since 1998, Hargeisa's most trusted source for pure, natural skincare.</div>
+                    <div class="hp-cta">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+                      </svg>
+                      Order via WhatsApp
+                    </div>
+                    <div class="hp-trust">
+                      <span class="hp-trust-item">100% Natural</span>
+                      <span class="hp-trust-dot">&nbsp;·&nbsp;</span>
+                      <span class="hp-trust-item">Est. 1998</span>
+                      <span class="hp-trust-dot">&nbsp;·&nbsp;</span>
+                      <span class="hp-trust-item">25+ Years</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="phone-label">Who We Are</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone 3 — Eucalyptus Oil -->
+      <div class="phone-slot">
+        <div class="phone-enter">
+          <div class="phone-float">
+            <div class="phone">
+              <div class="phone-screen">
+                <div class="pnav">
+                  <div class="pnav-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+                      <path d="M12 22s-8-6-8-12a8 8 0 0116 0c0 6-8 12-8 12z"/>
+                      <circle cx="12" cy="10" r="2.5" fill="#fff" stroke="none"/>
+                    </svg>
+                  </div>
+                  <span class="pnav-brand">ASLI MILLS</span>
+                  <div class="pnav-menu"><span></span><span></span><span></span></div>
+                </div>
+                <div class="s3-hero">
+                  <img src="../asli-mills site project/products/product4.jpg" alt="Eucalyptus Oil"
+                    onerror="this.style.background='linear-gradient(135deg,#f2e4ce,#e8d5b5)';this.removeAttribute('src')">
+                </div>
+                <div class="s3-back">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1B4332" stroke-width="3" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                  All Products
+                </div>
+                <div class="s3-body">
+                  <div class="s3-tag">100ML &nbsp;·&nbsp; 35ML</div>
+                  <div class="s3-name">Eucalyptus<br>Oil</div>
+                  <div class="s3-gold">Natural Product</div>
+                  <div class="s3-hr"></div>
+                  <div class="s3-lbl">Description</div>
+                  <div class="s3-desc">Made from fresh eucalyptus leaves with antibacterial, anti-inflammatory, and antiseptic properties. One of nature's most effective home remedies.</div>
+                  <div class="s3-hr"></div>
+                  <div class="s3-lbl">Benefits</div>
+                  <ul class="s3-benefits">
+                    <li>Antibacterial &amp; antiseptic properties</li>
+                    <li>Soothes irritated or inflamed skin</li>
+                    <li>Refreshing natural cooling sensation</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <span class="phone-label">Eucalyptus Oil</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phones-stage -->
+
+    <!-- CTA -->
+    <div class="cta-group">
+      <a class="cta-btn" href="../asli-mills site project/index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.553 4.122 1.524 5.855L.057 23.5l5.789-1.489A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.807 9.807 0 01-5.031-1.383l-.36-.214-3.437.884.914-3.354-.235-.374A9.83 9.83 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.43 0 9.818 4.388 9.818 9.818 0 5.43-4.388 9.818-9.818 9.818z"/>
+        </svg>
+        Explore the Collection
+      </a>
+      <p class="cta-note">Free delivery &nbsp;·&nbsp; 100% natural &nbsp;·&nbsp; Ethically sourced</p>
+    </div>
+
+  </main>
+
+  <!-- Bottom labels strip -->
+  <div class="bottom-tabs">
+    <span class="tab">Products</span>
+    <span class="tab">Who We Are</span>
+    <span class="tab">Eucalyptus Oil</span>
+  </div>
+
+  <!-- Shimmer line -->
+  <div class="strip"></div>
+
+  <script>
+    /* Spring-based mouse parallax on the phone cluster */
+    const stage = document.getElementById('phonesStage');
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+
+    document.addEventListener('mousemove', e => {
+      const hw = window.innerWidth / 2;
+      const hh = window.innerHeight / 2;
+      tx = (e.clientX - hw) / hw * 10;
+      ty = (e.clientY - hh) / hh * -6;
+    });
+
+    document.addEventListener('mouseleave', () => { tx = 0; ty = 0; });
+
+    (function tick() {
+      cx += (tx - cx) * 0.055;
+      cy += (ty - cy) * 0.055;
+      stage.style.transform =
+        `perspective(1400px) rotateY(${cx}deg) rotateX(${cy}deg)`;
+      requestAnimationFrame(tick);
+    })();
+  </script>
+
+</body>
+</html>

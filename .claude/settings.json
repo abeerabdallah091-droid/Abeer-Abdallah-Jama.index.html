@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/amala/Downloads/**)",
+      "Bash(/c/Users/amala/AppData/Local/Programs/Python/Python312/python.exe --version)",
+      "Bash(/c/Users/amala/AppData/Local/Programs/Python/Python312/python.exe -m pip install graphifyy -q)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\amala\\OneDrive\\Desktop\\ridwa nutrition company site"
+    ]
+  }
+}

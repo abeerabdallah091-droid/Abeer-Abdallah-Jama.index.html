@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asli Mills — Why This Site Changes Everything</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Montserrat:wght@500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    :root {
+      --green-900: #0D2B1A;
+      --green-800: #1B4332;
+      --green-700: #2D6A4F;
+      --green-400: #52B788;
+      --green-100: #D8F3DC;
+      --green-50:  #F0FAF3;
+      --gold:      #C9963A;
+      --gold-light:#FDF3E3;
+      --white:     #FFFFFF;
+      --off-white: #FAFAF8;
+      --gray-50:   #F6F5F3;
+      --gray-100:  #EBEBEA;
+      --gray-400:  #9C9C9A;
+      --gray-600:  #5C5C5A;
+      --gray-900:  #1A1A18;
+      --ease-out:  cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-full: 9999px;
+      --sh-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --sh-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+      --sh-lg: 0 12px 40px rgba(0,0,0,.12), 0 4px 10px rgba(0,0,0,.06);
+      --sh-xl: 0 24px 64px rgba(0,0,0,.14), 0 8px 20px rgba(0,0,0,.07);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--gray-900);
+      color: var(--gray-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── SLIDE BASE ─────────────────────────── */
+    .slide {
+      min-height: 100svh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 80px 48px;
+    }
+
+    /* ── NAV DOTS ───────────────────────────── */
+    .nav-dots {
+      position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+      z-index: 999;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .nav-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      transition: background 200ms var(--ease-out), transform 200ms var(--ease-out);
+      cursor: pointer;
+    }
+    .nav-dot.active { background: var(--gold); transform: scale(1.35); }
+
+    /* ── SLIDE 1 — COVER ────────────────────── */
+    .s-cover {
+      background: #08110a;
+      text-align: center;
+      justify-content: center;
+    }
+    .s-cover .blobs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); will-change: transform;
+    }
+    .blob-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(45,106,79,.6), transparent 65%); top: -200px; left: -100px; animation: b1 18s ease-in-out infinite alternate; }
+    .blob-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,150,58,.25), transparent 65%); bottom: -150px; right: -80px; animation: b2 22s ease-in-out infinite alternate; animation-delay: -9s; }
+    .blob-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(82,183,136,.3), transparent 65%); top: 40%; left: 40%; animation: b3 27s ease-in-out infinite alternate; animation-delay: -16s; }
+    @keyframes b1 { to { translate: 50px 40px; } }
+    @keyframes b2 { to { translate: -40px -30px; } }
+    @keyframes b3 { to { translate: 30px 50px; } }
+    @media (prefers-reduced-motion: reduce) { .blob { animation: none !important; } }
+
+    .cover-inner { position: relative; z-index: 2; max-width: 780px; }
+    .cover-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold);
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 700ms 100ms var(--ease-out) forwards;
+    }
+    .cover-eyebrow span { display: block; width: 28px; height: 2px; background: var(--gold); border-radius: 2px; }
+    .cover-h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(40px, 6vw, 80px); font-weight: 900;
+      line-height: 1.06; letter-spacing: -2px; color: #fff;
+      margin-bottom: 28px;
+      opacity: 0; animation: fadeUp 700ms 200ms var(--ease-out) forwards;
+    }
+    .cover-h1 em { font-style: italic; color: var(--gold); }
+    .cover-sub {
+      font-size: 18px; color: rgba(255,255,255,.65); line-height: 1.7; max-width: 540px; margin: 0 auto 40px;
+      opacity: 0; animation: fadeUp 700ms 320ms var(--ease-out) forwards;
+    }
+    .cover-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green-800); color: #fff;
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700;
+      padding: 16px 34px; border-radius: var(--r-full);
+      box-shadow: 0 4px 24px rgba(27,67,50,.45);
+      transition: transform 160ms var(--ease-out), background 160ms, box-shadow 160ms;
+      opacity: 0; animation: fadeUp 700ms 440ms var(--ease-out) forwards;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .cover-cta:hover { background: var(--green-700); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(27,67,50,.5); }
+    }
+    .cover-cta:active { transform: scale(0.97); }
+
+    .cover-by {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,.3); margin-top: 56px;
+      opacity: 0; animation: fadeUp 700ms 560ms var(--ease-out) forwards;
+    }
+
+    /* ── SLIDE 2 — THE PROBLEM ──────────────── */
+    .s-problem { background: var(--off-white); align-items: flex-start; }
+    .s-problem .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1100px; width: 100%; }
+    .problem-left { }
+    .problem-old {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .old-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--green-800); border: 1.5px solid var(--green-700);
+      border-radius: var(--r-md); padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(27,67,50,.25);
+      opacity: 0; transform: translateX(-20px);
+      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out), background 220ms var(--ease-out);
+    }
+    .old-item.vis { opacity: 1; transform: translateX(0); }
+    @media (hover: hover) and (pointer: fine) {
+      .old-item:hover { background: var(--green-700); }
+    }
+    .old-icon { font-size: 20px; flex-shrink: 0; width: 40px; text-align: center; }
+    .old-text strong { display: block; font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .old-text span { font-size: 12px; color: rgba(255,255,255,.6); }
+    .old-x { margin-left: auto; width: 22px; height: 22px; border-radius: 50%; background: rgba(239,68,68,.25); color: #fca5a5; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(239,68,68,.3); }
+
+    /* ── SLIDE 3 — FEATURES ─────────────────── */
+    .s-features { background: var(--green-900); }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      max-width: 1100px; width: 100%; margin-top: 56px;
+    }
+    .feat-card {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--r-xl); padding: 36px 30px;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out), background 220ms var(--ease-out), border-color 220ms var(--ease-out);
+    }
+    .feat-card.vis { opacity: 1; transform: translateY(0); }
+    @media (hover: hover) and (pointer: fine) {
+      .feat-card:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); }
+    }
+    .feat-icon { font-size: 36px; margin-bottom: 18px; }
+    .feat-title { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .feat-body { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.75; }
+    .feat-tag {
+      display: inline-block; margin-top: 16px;
+      font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); background: rgba(201,150,58,.12); border: 1px solid rgba(201,150,58,.25);
+      padding: 5px 11px; border-radius: var(--r-full);
+    }
+
+    /* ── SLIDE 4 — WHATSAPP ORDERING ────────── */
+    .s-whatsapp { background: var(--white); }
+    .wa-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1100px; width: 100%; }
+
+    /* ── REAL WHATSAPP PHONE UI ─────────────── */
+    .wa-phone {
+      border-radius: 42px; background: #111b21;
+      box-shadow: var(--sh-xl); border: 6px solid #0a1014;
+      overflow: hidden; max-width: 300px; width: 100%;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .wa-phone.vis { opacity: 1; transform: translateY(0); }
+
+    .wa-statusbar {
+      background: #111b21; height: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px;
+      font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; color: rgba(255,255,255,.7);
+    }
+    .wa-header {
+      background: #1f2c34; padding: 10px 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .wa-back { color: #25D366; font-size: 20px; line-height: 1; }
+    .wa-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2D6A4F, #1B4332);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .wa-contact-name { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #fff; }
+    .wa-contact-status { font-size: 10px; color: #25D366; margin-top: 1px; }
+    .wa-header-icons { margin-left: auto; display: flex; gap: 16px; color: #aebac1; font-size: 15px; }
+
+    .wa-body {
+      background: #0b141a url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23182229' fill-opacity='0.6'%3E%3Cpath d='M40 40c0-4.4-3.6-8-8-8s-8 3.6-8 8 3.6 8 8 8 8-3.6 8-8zm4 0c0 6.6-5.4 12-12 12S20 46.6 20 40s5.4-12 12-12 12 5.4 12 12zm12-12c0-4.4-3.6-8-8-8s-8 3.6-8 8 3.6 8 8 8 8-3.6 8-8zm4 0c0 6.6-5.4 12-12 12S36 34.6 36 28s5.4-12 12-12 12 5.4 12 12z'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 10px 10px 6px;
+      display: flex; flex-direction: column; gap: 5px;
+      min-height: 320px;
+    }
+    .wa-date-chip {
+      align-self: center; background: rgba(17,27,33,.85); color: #8696a0;
+      font-size: 10px; padding: 3px 9px; border-radius: 6px; margin-bottom: 4px;
+    }
+
+    .wa-msg {
+      max-width: 82%; padding: 7px 11px 4px; border-radius: 8px;
+      font-size: 12px; line-height: 1.45; color: #e9edef;
+      position: relative;
+      opacity: 0; transform: translateY(5px);
+    }
+    .wa-msg.vis { opacity: 1; transform: translateY(0); transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
+    .wa-msg.in { background: #1f2c34; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .wa-msg.in::before {
+      content:''; position:absolute; left:-6px; top:0;
+      border:6px solid transparent; border-right-color:#1f2c34; border-top-color:#1f2c34;
+    }
+    .wa-msg.out { background: #005c4b; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .wa-msg.out::after {
+      content:''; position:absolute; right:-6px; top:0;
+      border:6px solid transparent; border-left-color:#005c4b; border-top-color:#005c4b;
+    }
+    .wa-sender { font-size: 10px; font-weight: 700; color: #25D366; margin-bottom: 3px; }
+    .wa-meta { display: flex; justify-content: flex-end; align-items: center; gap: 4px; margin-top: 2px; }
+    .wa-time { font-size: 9.5px; color: #8696a0; }
+    .wa-ticks { font-size: 10px; color: #53bdeb; }
+
+    .wa-typing {
+      background: #1f2c34; align-self: flex-start;
+      border-radius: 8px; border-bottom-left-radius: 2px;
+      padding: 10px 14px; display: flex; gap: 4px; align-items: center;
+      opacity: 0; transition: opacity 300ms var(--ease-out);
+    }
+    .wa-typing.vis { opacity: 1; }
+    .wa-typing span { width: 6px; height: 6px; border-radius: 50%; background: #8696a0; animation: tdot 1.2s ease-in-out infinite; }
+    .wa-typing span:nth-child(2) { animation-delay: .2s; }
+    .wa-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes tdot { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
+    @media (prefers-reduced-motion:reduce) { .wa-typing span { animation:none; } }
+
+    .wa-input-bar {
+      background: #1f2c34; padding: 8px 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .wa-input-field {
+      flex: 1; background: #2a3942; border-radius: 20px; padding: 8px 14px;
+      font-size: 11px; color: rgba(255,255,255,.5);
+    }
+    .wa-send-btn {
+      width: 34px; height: 34px; border-radius: 50%; background: #25D366; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff;
+      transition: transform 160ms var(--ease-out), background 160ms;
+    }
+    .wa-send-btn:active { transform: scale(0.92); }
+    @media (hover:hover) and (pointer:fine) { .wa-send-btn:hover { background: #128C7E; } }
+
+    /* ── SLIDE 5 — ANIMATIONS / INTERACTIONS ── */
+    .s-animations { background: var(--gray-50); }
+    .anim-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; width: 100%; margin-top: 52px; }
+    .anim-card {
+      background: var(--white); border: 1.5px solid var(--gray-100); border-radius: var(--r-xl); padding: 30px 28px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 350ms var(--ease-out), transform 350ms var(--ease-out), box-shadow 220ms var(--ease-out);
+    }
+    .anim-card.vis { opacity: 1; transform: translateY(0); }
+    @media (hover: hover) and (pointer: fine) { .anim-card:hover { box-shadow: var(--sh-md); } }
+    .anim-demo { margin-bottom: 18px; }
+    .demo-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: var(--r-full);
+      font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+      background: var(--green-800); color: #fff;
+      transition: transform 160ms var(--ease-out), background 160ms, box-shadow 160ms;
+      box-shadow: 0 2px 12px rgba(27,67,50,.2);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .demo-btn:hover { background: var(--green-700); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,67,50,.35); }
+    }
+    .demo-btn:active { transform: scale(0.97); }
+    .demo-tag-wrap { display: flex; gap: 8px; flex-wrap: wrap; }
+    .demo-tag {
+      padding: 8px 16px; border-radius: var(--r-full); font-size: 12px; font-weight: 600;
+      background: var(--green-100); color: var(--green-800);
+      transition: transform 160ms var(--ease-out), box-shadow 160ms;
+    }
+    @media (hover: hover) and (pointer: fine) { .demo-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45,106,79,.2); } }
+    .demo-tag:active { transform: scale(0.97); }
+    .anim-label { font-size: 15px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+    .anim-desc { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
+
+    .demo-heart {
+      font-size: 24px; cursor: pointer;
+      transition: transform 160ms var(--ease-out), color 160ms;
+      color: var(--gray-400); display: inline-block;
+    }
+    @media (hover: hover) and (pointer: fine) { .demo-heart:hover { transform: scale(1.15); color: #e05a5a; } }
+    .demo-heart:active { transform: scale(0.88); }
+    .demo-heart.liked { color: #e05a5a; }
+
+    .demo-scroll-line {
+      height: 3px; border-radius: 3px; width: 0%;
+      background: linear-gradient(to right, var(--green-700), var(--gold));
+      transition: width 1.2s var(--ease-out);
+      margin-bottom: 6px;
+    }
+    .demo-scroll-line.vis { width: 72%; }
+
+    /* ── SLIDE 6 — SEO / TRUST ──────────────── */
+    .s-seo { background: var(--green-800); }
+    .seo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1000px; width: 100%; margin-top: 52px; }
+    .seo-card {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--r-xl); padding: 32px 26px;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 380ms var(--ease-out), transform 380ms var(--ease-out);
+    }
+    .seo-card.vis { opacity: 1; transform: translateY(0); }
+    .seo-num {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 52px; font-weight: 900; color: var(--gold);
+      letter-spacing: -2px; line-height: 1; margin-bottom: 8px;
+    }
+    .seo-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 10px; }
+    .seo-body { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.7; }
+
+    /* ── SLIDE 7 — MOBILE ───────────────────── */
+    .s-mobile { background: var(--off-white); }
+    .mobile-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1100px; width: 100%; }
+    .mobile-mockup {
+      display: flex; flex-direction: column; gap: 0;
+      background: var(--gray-900); border-radius: 40px;
+      overflow: hidden; box-shadow: var(--sh-xl);
+      border: 6px solid var(--gray-900);
+      max-width: 280px; margin: 0 auto;
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .mobile-mockup.vis { opacity: 1; transform: translateY(0); }
+    .mob-bar { height: 28px; background: #111; display: flex; align-items: center; justify-content: center; }
+    .mob-bar span { width: 56px; height: 5px; border-radius: 4px; background: rgba(255,255,255,.15); }
+    /* browser chrome bar below notch */
+    .mob-browser-bar {
+      background: #1c1c1e; padding: 6px 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mob-browser-dots { display: flex; gap: 3px; flex-shrink: 0; }
+    .mob-browser-dots span { width: 6px; height: 6px; border-radius: 50%; }
+    .mob-browser-dots span:nth-child(1) { background: #ff5f57; }
+    .mob-browser-dots span:nth-child(2) { background: #febc2e; }
+    .mob-browser-dots span:nth-child(3) { background: #28c840; }
+    .mob-url-bar {
+      flex: 1; background: #2c2c2e; border-radius: 6px;
+      padding: 4px 8px; display: flex; align-items: center; gap: 5px;
+    }
+    .mob-url-lock { font-size: 8px; color: #8e8e93; }
+    .mob-url-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; font-weight: 600; color: #e5e5ea;
+      letter-spacing: 0.01em;
+    }
+    .mob-url-text em { font-style: normal; color: #30d158; }
+    /* iframe embed — scales the real site down to phone width */
+    .mob-iframe-wrap {
+      width: 268px; height: 480px;
+      overflow: hidden; position: relative;
+    }
+    .mob-iframe {
+      width: 375px; height: 812px;
+      border: none; display: block;
+      transform: scale(0.715);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+
+    /* ── SLIDE 8 — COMPARISON ───────────────── */
+    .s-compare { background: var(--white); }
+    .compare-table { width: 100%; max-width: 900px; border-collapse: collapse; margin-top: 52px; }
+    .compare-table th, .compare-table td { padding: 16px 20px; text-align: left; }
+    .compare-table thead th { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); border-bottom: 2px solid var(--gray-100); }
+    .compare-table thead th.col-new { color: var(--green-800); }
+    .compare-table tbody tr { border-bottom: 1px solid var(--gray-100); opacity: 0; transform: translateX(-12px); transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out), background 160ms; }
+    .compare-table tbody tr.vis { opacity: 1; transform: translateX(0); }
+    @media (hover: hover) and (pointer: fine) { .compare-table tbody tr:hover { background: var(--gray-50); } }
+    .compare-table td:first-child { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+    .compare-table td.col-old { font-size: 13px; color: #ef4444; }
+    .compare-table td.col-new { font-size: 13px; color: var(--green-700); font-weight: 600; }
+    .check { display: inline-flex; align-items: center; gap: 6px; }
+    .check::before { content: '✓'; width: 18px; height: 18px; border-radius: 50%; background: var(--green-100); color: var(--green-700); font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cross { display: inline-flex; align-items: center; gap: 6px; }
+    .cross::before { content: '✗'; width: 18px; height: 18px; border-radius: 50%; background: #fee2e2; color: #ef4444; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── SLIDE 9 — CTA ──────────────────────── */
+    .s-cta { background: #08110a; text-align: center; }
+    .cta-inner { position: relative; z-index: 2; max-width: 700px; }
+    .cta-tag {
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+      display: inline-flex; align-items: center; gap: 12px; margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 700ms 100ms var(--ease-out) forwards;
+    }
+    .cta-tag span { display: block; width: 24px; height: 2px; background: var(--gold); border-radius: 2px; }
+    .cta-h { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(36px, 5vw, 68px); font-weight: 900; line-height: 1.08; letter-spacing: -1.5px; color: #fff; margin-bottom: 24px; opacity: 0; animation: fadeUp 700ms 200ms var(--ease-out) forwards; }
+    .cta-h em { font-style: italic; color: var(--gold); }
+    .cta-sub { font-size: 17px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 44px; opacity: 0; animation: fadeUp 700ms 320ms var(--ease-out) forwards; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 700ms 440ms var(--ease-out) forwards; }
+    .btn-gold {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--gold); color: var(--gray-900);
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800;
+      padding: 18px 36px; border-radius: var(--r-full);
+      box-shadow: 0 4px 24px rgba(201,150,58,.45);
+      transition: transform 160ms var(--ease-out), box-shadow 160ms, filter 160ms;
+    }
+    @media (hover: hover) and (pointer: fine) { .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(201,150,58,.5); filter: brightness(1.08); } }
+    .btn-gold:active { transform: scale(0.97); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: rgba(255,255,255,.75);
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+      padding: 18px 32px; border-radius: var(--r-full);
+      border: 1.5px solid rgba(255,255,255,.2);
+      transition: transform 160ms var(--ease-out), background 160ms, border-color 160ms;
+    }
+    @media (hover: hover) and (pointer: fine) { .btn-ghost:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.35); } }
+    .btn-ghost:active { transform: scale(0.97); }
+    /* shareable link pill */
+    .cta-link-pill {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15);
+      border-radius: var(--r-full); padding: 12px 20px;
+      margin-bottom: 28px;
+      transition: background 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 160ms var(--ease-out);
+      opacity: 0; animation: fadeUp 700ms 380ms var(--ease-out) forwards;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .cta-link-pill:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.28); transform: translateY(-1px); }
+    }
+    .cta-link-pill:active { transform: scale(0.97); }
+    .cta-link-icon { font-size: 16px; }
+    .cta-link-url { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 500; color: rgba(255,255,255,.7); letter-spacing: 0.01em; }
+    .cta-link-url strong { font-weight: 800; color: #fff; }
+    .cta-link-copy {
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--gold); background: rgba(201,150,58,.15);
+      border: 1px solid rgba(201,150,58,.25);
+      padding: 4px 10px; border-radius: var(--r-full);
+    }
+    .cta-credit { font-size: 12px; color: rgba(255,255,255,.25); margin-top: 52px; letter-spacing: 0.06em; opacity: 0; animation: fadeUp 700ms 560ms var(--ease-out) forwards; }
+
+    /* ── SHARED SECTION HEADING ─────────────── */
+    .section-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .section-tag::before { content: ''; display: block; width: 20px; height: 2px; background: var(--gold); border-radius: 2px; }
+    .section-tag.light { color: rgba(255,255,255,.5); }
+    .section-tag.light::before { background: rgba(255,255,255,.3); }
+    .section-tag.center { justify-content: center; }
+    .section-tag.center::before, .section-tag.center::after { content: ''; display: block; width: 20px; height: 2px; border-radius: 2px; }
+    .section-tag.center.light::before, .section-tag.center.light::after { background: rgba(255,255,255,.3); }
+    .section-tag.center::before, .section-tag.center::after { background: var(--gold); }
+    .sh2-light { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(28px, 3.5vw, 48px); font-weight: 900; line-height: 1.1; letter-spacing: -0.8px; color: #fff; margin-bottom: 12px; }
+    .sh2-dark { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(28px, 3.5vw, 48px); font-weight: 900; line-height: 1.1; letter-spacing: -0.8px; color: var(--gray-900); margin-bottom: 12px; }
+    .ssub-light { font-size: 16px; color: rgba(255,255,255,.55); line-height: 1.7; max-width: 520px; }
+    .ssub-dark { font-size: 16px; color: var(--gray-600); line-height: 1.7; max-width: 520px; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── SCROLL PROGRESS ────────────────────── */
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+      background: linear-gradient(to right, var(--green-700), var(--gold));
+      transition: width 150ms linear;
+    }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+
+    /* ── tablet ─── */
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .seo-grid       { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── mobile ─── */
+    @media (max-width: 768px) {
+      /* base slide */
+      .slide { padding: 52px 22px; min-height: 100svh; align-items: flex-start; }
+
+      /* nav chrome */
+      .nav-dots { right: 10px; gap: 8px; }
+      .nav-dot  { width: 6px; height: 6px; }
+      .slide-counter { bottom: 14px; right: 14px; font-size: 9px; }
+
+      /* cover */
+      .cover-inner { text-align: left; }
+      .cover-eyebrow { font-size: 10px; }
+      .cover-h1 { font-size: clamp(32px, 9vw, 46px); letter-spacing: -1px; }
+      .cover-sub { font-size: 14px; }
+      .cover-cta { width: 100%; justify-content: center; }
+      .cover-stats { gap: 0; }
+      .cover-stat { padding: 0 6px; }
+
+      /* problem */
+      .s-problem .layout { grid-template-columns: 1fr; gap: 28px; }
+      .old-item { padding: 13px 14px; }
+      .old-text strong { font-size: 13px; }
+      .old-text span { font-size: 11px; }
+
+      /* features */
+      .features-grid { grid-template-columns: 1fr; gap: 12px; }
+      .feat-card { padding: 24px 20px; }
+      .feat-title { font-size: 17px; }
+      .feat-body { font-size: 13px; }
+
+      /* whatsapp slide */
+      .wa-layout { grid-template-columns: 1fr; gap: 36px; }
+      .wa-phone { max-width: 100%; border-radius: 28px; border-width: 5px; }
+      .wa-body  { min-height: 260px; }
+      .wa-msg   { font-size: 12px; }
+
+      /* animations slide */
+      .anim-grid { grid-template-columns: 1fr; gap: 14px; }
+      .anim-card { padding: 22px 18px; }
+
+      /* seo numbers */
+      .seo-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .seo-num  { font-size: 38px; }
+      .seo-label { font-size: 10px; }
+      .seo-body  { font-size: 12px; }
+
+      /* mobile-phone slide — stack: phone on top, bullets below */
+      .mobile-layout { grid-template-columns: 1fr; gap: 32px; }
+      .mobile-mockup { max-width: 220px; border-radius: 32px; border-width: 5px; }
+      .mob-iframe-wrap { width: 210px; height: 370px; }
+      .mob-iframe { width: 320px; height: 620px; transform: scale(0.656); }
+
+      /* comparison — horizontal scroll so columns don't get crushed */
+      .s-compare { overflow: auto; }
+      .compare-table-wrap { overflow-x: auto; width: 100%; padding-bottom: 8px; }
+      .compare-table { min-width: 480px; margin-top: 28px; }
+      .compare-table th, .compare-table td { padding: 11px 12px; font-size: 11px; }
+      .compare-table td:first-child { font-size: 11px; }
+
+      /* cta */
+      .cta-actions { flex-direction: column; align-items: stretch; }
+      .btn-gold, .btn-ghost { width: 100%; justify-content: center; }
+      .cta-sub { font-size: 15px; }
+      .cta-credit { font-size: 10px; margin-top: 32px; }
+
+      /* headings */
+      .sh2-light, .sh2-dark { font-size: clamp(24px, 7vw, 36px); }
+      .ssub-light, .ssub-dark { font-size: 14px; }
+      .section-tag { font-size: 10px; }
+    }
+
+    /* ── small phones ─── */
+    @media (max-width: 420px) {
+      .slide { padding: 44px 18px; }
+      .cover-h1 { font-size: 30px; }
+      .cover-stats { flex-wrap: wrap; gap: 12px; }
+      .cover-stat + .cover-stat { border-left: none; }
+      .cstat-n { font-size: 22px; }
+      .nav-dots { display: none; }
+      .slide-counter { display: none; }
+      .features-grid { gap: 10px; }
+      .feat-icon { font-size: 28px; margin-bottom: 12px; }
+      .seo-grid { grid-template-columns: 1fr; }
+      .seo-num { font-size: 44px; }
+      .wa-phone { border-radius: 24px; }
+      .mobile-mockup { max-width: 200px; }
+      .mob-iframe-wrap { width: 192px; height: 340px; }
+      .mob-iframe { width: 300px; height: 580px; transform: scale(0.64); }
+      .anim-grid { gap: 10px; }
+    }
+
+    /* ── FLOATING SLIDE COUNTER ─────────────── */
+    .slide-counter {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,.35); letter-spacing: 0.08em;
+    }
+
+    /* ── STAGGER DELAY HELPERS ──────────────── */
+    [data-delay="1"] { transition-delay: 60ms !important; }
+    [data-delay="2"] { transition-delay: 120ms !important; }
+    [data-delay="3"] { transition-delay: 180ms !important; }
+    [data-delay="4"] { transition-delay: 240ms !important; }
+    [data-delay="5"] { transition-delay: 300ms !important; }
+    [data-delay="6"] { transition-delay: 360ms !important; }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Nav dots -->
+  <nav class="nav-dots" id="navDots">
+    <div class="nav-dot active" data-slide="0"></div>
+    <div class="nav-dot" data-slide="1"></div>
+    <div class="nav-dot" data-slide="2"></div>
+    <div class="nav-dot" data-slide="3"></div>
+    <div class="nav-dot" data-slide="4"></div>
+    <div class="nav-dot" data-slide="5"></div>
+    <div class="nav-dot" data-slide="6"></div>
+    <div class="nav-dot" data-slide="7"></div>
+    <div class="nav-dot" data-slide="8"></div>
+  </nav>
+
+  <!-- Slide counter -->
+  <div class="slide-counter" id="slideCounter">01 / 09</div>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 1 — COVER                     -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-cover" id="slide-0">
+    <div class="blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="cover-inner">
+      <div class="cover-eyebrow"><span></span> Asli Mills — Sales Presentation <span></span></div>
+      <h1 class="cover-h1">A Website That<br><em>Sells for You,</em><br>While You Sleep</h1>
+      <p class="cover-sub">This is your new website. It works for you all day, every day — showing your products, building customer trust, and bringing in orders.</p>
+      <a href="#slide-1" class="cover-cta">See What's New ↓</a>
+      <p class="cover-by">Designed by &nbsp;<svg width="86" height="20" viewBox="0 0 86 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin:0 4px -2px;"><rect width="86" height="20" rx="10" fill="#2563EB"/><circle cx="11" cy="10" r="6.5" fill="white"/><circle cx="11" cy="10" r="3.5" fill="#2563EB"/><text x="21" y="14.5" font-family="Montserrat,sans-serif" font-size="10" font-weight="700" fill="white">horumar</text></svg>&nbsp; Horumar Solution &nbsp;·&nbsp; 2026</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 2 — THE PROBLEM               -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-problem" id="slide-1">
+    <div class="layout">
+      <div class="problem-left">
+        <div class="section-tag">The Problem</div>
+        <h2 class="sh2-dark">Old Websites Are<br>Costing You Sales</h2>
+        <p class="ssub-dark" style="margin-top:14px;">Your products are top quality. But your old website was not showing that. Here is what was holding your business back — and how every single problem is now fixed.</p>
+      </div>
+      <div class="problem-old">
+        <div class="old-item" data-delay="1">
+          <div class="old-icon">📵</div>
+          <div class="old-text">
+            <strong>No WhatsApp Integration</strong>
+            <span>Customers had no way to contact you instantly</span>
+          </div>
+          <div class="old-x">✗</div>
+        </div>
+        <div class="old-item" data-delay="2">
+          <div class="old-icon">📱</div>
+          <div class="old-text">
+            <strong>Not Mobile-Friendly</strong>
+            <span>90% of your customers shop on their phone</span>
+          </div>
+          <div class="old-x">✗</div>
+        </div>
+        <div class="old-item" data-delay="3">
+          <div class="old-icon">🔍</div>
+          <div class="old-text">
+            <strong>Invisible to Search Engines</strong>
+            <span>No SEO — people searching couldn't find you</span>
+          </div>
+          <div class="old-x">✗</div>
+        </div>
+        <div class="old-item" data-delay="4">
+          <div class="old-icon">😐</div>
+          <div class="old-text">
+            <strong>No Trust Signals</strong>
+            <span>No reviews, no stats — nothing to build confidence</span>
+          </div>
+          <div class="old-x">✗</div>
+        </div>
+        <div class="old-item" data-delay="5">
+          <div class="old-icon">🎨</div>
+          <div class="old-text">
+            <strong>Didn't Match Your Brand Quality</strong>
+            <span>Amateur look clashed with your premium products</span>
+          </div>
+          <div class="old-x">✗</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 3 — FEATURES                  -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-features" id="slide-2">
+    <div class="section-tag light center">What's Different Now</div>
+    <h2 class="sh2-light" style="text-align:center;">Built to Look Great<br>and Get You Orders</h2>
+    <div class="features-grid">
+      <div class="feat-card" data-delay="1">
+        <div class="feat-icon">✨</div>
+        <div class="feat-title">Premium Visual Identity</div>
+        <div class="feat-body">Your website now looks as good as your products. Beautiful design and fonts that make customers feel they are shopping from a trusted brand.</div>
+        <div class="feat-tag">Design Excellence</div>
+      </div>
+      <div class="feat-card" data-delay="2">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">WhatsApp-First Ordering</div>
+        <div class="feat-body">Every product card has a direct WhatsApp button. Customers order in seconds — no forms, no friction, no lost sales.</div>
+        <div class="feat-tag">Instant Conversion</div>
+      </div>
+      <div class="feat-card" data-delay="3">
+        <div class="feat-icon">📱</div>
+        <div class="feat-title">Built for Mobile First</div>
+        <div class="feat-body">The menu, layout, and buttons all adjust perfectly for any screen size. Looks great on every phone, tablet, and computer.</div>
+        <div class="feat-tag">Mobile Optimized</div>
+      </div>
+      <div class="feat-card" data-delay="4">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Full SEO Setup</div>
+        <div class="feat-body">When you share your link on WhatsApp, Instagram, or Facebook, it shows a beautiful preview with your brand name and description — automatically.</div>
+        <div class="feat-tag">Discoverability</div>
+      </div>
+      <div class="feat-card" data-delay="5">
+        <div class="feat-icon">⭐</div>
+        <div class="feat-title">Built-In Trust System</div>
+        <div class="feat-body">Scrolling testimonials marquee, customer stats, product ratings, and a continuous trust badge bar — social proof built in.</div>
+        <div class="feat-tag">Credibility</div>
+      </div>
+      <div class="feat-card" data-delay="6">
+        <div class="feat-icon">🎬</div>
+        <div class="feat-title">Smooth Animations</div>
+        <div class="feat-body">Everything moves smoothly as customers scroll and browse. Buttons react to taps, sections slide into view — it feels fast, modern, and professional.</div>
+        <div class="feat-tag">Feel & Delight</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 4 — WHATSAPP                  -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-whatsapp" id="slide-3">
+    <div class="wa-layout">
+      <div>
+        <div class="section-tag">Ordering Experience</div>
+        <h2 class="sh2-dark">Your Customers Order<br>in 3 Seconds Flat</h2>
+        <p class="ssub-dark" style="margin-top:14px; margin-bottom:28px;">No checkout forms. No account creation. No confusion. They tap the WhatsApp button, the message is pre-filled, and they order instantly. That's it.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:12px; padding: 16px 18px; background:var(--green-50); border-radius:var(--r-md); border: 1px solid var(--green-100);">
+            <span style="font-size:20px;">🛒</span>
+            <div>
+              <strong style="font-size:14px; color:var(--gray-900); display:block; margin-bottom:2px;">No Shopping Cart Needed</strong>
+              <span style="font-size:12px; color:var(--gray-600);">Direct conversation = higher trust = more conversions</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding: 16px 18px; background:var(--green-50); border-radius:var(--r-md); border: 1px solid var(--green-100);">
+            <span style="font-size:20px;">⚡</span>
+            <div>
+              <strong style="font-size:14px; color:var(--gray-900); display:block; margin-bottom:2px;">Pre-Filled Messages</strong>
+              <span style="font-size:12px; color:var(--gray-600);">Customers don't type — product name is already in the message</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding: 16px 18px; background:var(--green-50); border-radius:var(--r-md); border: 1px solid var(--green-100);">
+            <span style="font-size:20px;">🌍</span>
+            <div>
+              <strong style="font-size:14px; color:var(--gray-900); display:block; margin-bottom:2px;">Works Anywhere in the World</strong>
+              <span style="font-size:12px; color:var(--gray-600);">WhatsApp has 2 billion users — your market is global</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="wa-phone" id="waPhone">
+        <!-- status bar -->
+        <div class="wa-statusbar">
+          <span>9:41</span>
+          <span style="display:flex;gap:5px;align-items:center;font-size:9px;">▲▼ 📶 🔋</span>
+        </div>
+        <!-- header -->
+        <div class="wa-header">
+          <div class="wa-back">‹</div>
+          <div class="wa-avatar">🌿</div>
+          <div style="flex:1;">
+            <div class="wa-contact-name">Asli Mills</div>
+            <div class="wa-contact-status">online</div>
+          </div>
+          <div class="wa-header-icons">📞 ⋮</div>
+        </div>
+        <!-- chat body -->
+        <div class="wa-body" id="waChat">
+          <div class="wa-date-chip">Today</div>
+
+          <div class="wa-msg in" data-msg="0">
+            <div class="wa-sender">Faadumo Hassan</div>
+            Salaam! I saw your website 🌿 Do you deliver to Hargeisa?
+            <div class="wa-meta"><span class="wa-time">9:38</span></div>
+          </div>
+
+          <div class="wa-msg out" data-msg="1">
+            Wa alaykum salaam! Yes we do 😊 We deliver across Somaliland within 2–3 days. What would you like to order?
+            <div class="wa-meta"><span class="wa-time">9:39</span><span class="wa-ticks">✓✓</span></div>
+          </div>
+
+          <div class="wa-msg in" data-msg="2">
+            I'd like the Qasil 80g and the Eucalyptus Oil 30ml please!
+            <div class="wa-meta"><span class="wa-time">9:40</span></div>
+          </div>
+
+          <div class="wa-msg out" data-msg="3">
+            Perfect choice! 🌱 That's:<br>• Qasil 80g<br>• Eucalyptus Oil 30ml<br><br>Can I get your delivery address?
+            <div class="wa-meta"><span class="wa-time">9:41</span><span class="wa-ticks">✓✓</span></div>
+          </div>
+
+          <div class="wa-msg in" data-msg="4">
+            26 June area, near the central mosque. Name: Faadumo Hassan 🙏
+            <div class="wa-meta"><span class="wa-time">9:42</span></div>
+          </div>
+
+          <div class="wa-msg out" data-msg="5">
+            Order confirmed ✅ We'll deliver Thursday. Thank you for choosing Asli Mills! 💚
+            <div class="wa-meta"><span class="wa-time">9:42</span><span class="wa-ticks">✓✓</span></div>
+          </div>
+
+          <div class="wa-typing" id="waTyping">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <!-- input bar -->
+        <div class="wa-input-bar">
+          <div class="wa-input-field">Type a message…</div>
+          <button class="wa-send-btn" aria-label="Send">➤</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 5 — ANIMATIONS                -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-animations" id="slide-4">
+    <div style="width:100%; max-width:900px;">
+      <div class="section-tag center">The Feel</div>
+      <h2 class="sh2-dark" style="text-align:center; max-width:600px; margin:0 auto 8px;">Small Touches That<br>Make It Feel Great</h2>
+      <p class="ssub-dark" style="text-align:center; margin:0 auto 0; max-width:480px;">Every button and scroll feels smooth and satisfying. This is the kind of quality your customers will notice. Try them below.</p>
+    </div>
+    <div class="anim-grid">
+      <div class="anim-card" data-delay="1">
+        <div class="anim-demo">
+          <button class="demo-btn">Order on WhatsApp ↗</button>
+        </div>
+        <div class="anim-label">Button Press Feedback</div>
+        <div class="anim-desc">Every button gives a small press feeling when you tap it. Customers feel in control — every click is confirmed instantly.</div>
+      </div>
+      <div class="anim-card" data-delay="2">
+        <div class="anim-demo">
+          <div class="demo-tag-wrap">
+            <div class="demo-tag">100% Organic</div>
+            <div class="demo-tag">Handcrafted</div>
+            <div class="demo-tag">Vegan</div>
+          </div>
+        </div>
+        <div class="anim-label">Floating Pills on Hover</div>
+        <div class="anim-desc">Product labels gently lift when you hover over them — a small touch that makes the website feel polished and high quality.</div>
+      </div>
+      <div class="anim-card" data-delay="3">
+        <div class="anim-demo">
+          <div class="demo-scroll-line" id="scrollLine"></div>
+          <span style="font-size:11px; color:var(--gray-400);">Scroll reveal in progress…</span>
+        </div>
+        <div class="anim-label">Scroll-Triggered Reveals</div>
+        <div class="anim-desc">Every section smoothly appears as you scroll down the page. Clean, calm, and easy on the eyes.</div>
+      </div>
+      <div class="anim-card" data-delay="4">
+        <div class="anim-demo" style="display:flex; align-items:center; gap:16px;">
+          <div class="demo-heart" id="demoHeart" onclick="this.classList.toggle('liked')">♥</div>
+          <span style="font-size:13px; color:var(--gray-600);">Tap to save a product</span>
+        </div>
+        <div class="anim-label">Wishlist Interactions</div>
+        <div class="anim-desc">Customers can save products they love with a single tap. Simple, satisfying, and easy to use.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 6 — SEO / NUMBERS             -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-seo" id="slide-5">
+    <div class="section-tag light center">The Numbers</div>
+    <h2 class="sh2-light" style="text-align:center;">Why This Matters<br>for Your Business</h2>
+    <div class="seo-grid">
+      <div class="seo-card" data-delay="1">
+        <div class="seo-num">90%</div>
+        <div class="seo-label">Mobile Shoppers</div>
+        <div class="seo-body">9 in 10 of your customers browse on mobile. This site is built mobile-first — every tap, every scroll, every button.</div>
+      </div>
+      <div class="seo-card" data-delay="2">
+        <div class="seo-num">3s</div>
+        <div class="seo-label">Time to Order</div>
+        <div class="seo-body">From landing on the site to sending a WhatsApp order — three seconds. Every extra second loses 20% of buyers.</div>
+      </div>
+      <div class="seo-card" data-delay="3">
+        <div class="seo-num">2M+</div>
+        <div class="seo-label">Somaliland WhatsApp Users</div>
+        <div class="seo-body">WhatsApp is how people in Somaliland communicate every day. Your customers are already on it — ready to discover and order from your business.</div>
+      </div>
+      <div class="seo-card" data-delay="4">
+        <div class="seo-num">100%</div>
+        <div class="seo-label">SEO Ready</div>
+        <div class="seo-body">When you share your website link on WhatsApp, Instagram, or Facebook, it shows a nice preview image and description — automatically, no extra work needed.</div>
+      </div>
+      <div class="seo-card" data-delay="5">
+        <div class="seo-num">0s</div>
+        <div class="seo-label">Load Time for Animations</div>
+        <div class="seo-body">All animations load instantly and never slow the website down. The site stays fast no matter what is happening on screen.</div>
+      </div>
+      <div class="seo-card" data-delay="6">
+        <div class="seo-num">∞</div>
+        <div class="seo-label">Works 24 / 7</div>
+        <div class="seo-body">Your website takes orders while you sleep, sells while you're with family, and builds your brand around the clock.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 7 — MOBILE                    -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-mobile" id="slide-6">
+    <div class="mobile-layout">
+      <div class="mobile-mockup" id="mobileMockup">
+        <!-- phone notch / camera pill -->
+        <div class="mob-bar"><span></span></div>
+        <!-- browser chrome with real URL -->
+        <div class="mob-browser-bar">
+          <div class="mob-browser-dots"><span></span><span></span><span></span></div>
+          <div class="mob-url-bar">
+            <span class="mob-url-lock">🔒</span>
+            <span class="mob-url-text"><em>tinyurl.com</em>/asli-mills</span>
+          </div>
+        </div>
+        <!-- real site inside an iframe scaled to phone width -->
+        <div class="mob-iframe-wrap">
+          <iframe
+            src="https://horumar-solution.github.io/asli-mills/"
+            class="mob-iframe"
+            title="Asli Mills live site preview"
+            scrolling="no"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+      <div>
+        <div class="section-tag">Mobile Experience</div>
+        <h2 class="sh2-dark">Looks Perfect on<br>Every Screen</h2>
+        <p class="ssub-dark" style="margin-top:14px; margin-bottom:32px;">From the smallest phone to the biggest screen — your website adjusts to fit perfectly. The menu opens smoothly, everything lines up correctly, and every button is easy to tap.</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--gray-700);">Animated hamburger menu → smooth ✕ transition</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--gray-700);">Touch-optimized product cards with tap feedback</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--gray-700);">The top menu stays visible as you scroll — always easy to navigate</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--gray-700);">Hover effects only show on computers — never triggered by accident on phones</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:var(--gold); flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--gray-700);">Even the browser tab color matches your brand</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 8 — COMPARISON                -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-compare" id="slide-7">
+    <div style="width:100%; max-width:900px;">
+      <div class="section-tag center">Side by Side</div>
+      <h2 class="sh2-dark" style="text-align:center;">Old Asli Mills vs. Asli Mills</h2>
+      <div class="compare-table-wrap"><table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="col-old">❌ Before</th>
+            <th class="col-new">✓ Asli Mills</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-delay="1">
+            <td>WhatsApp Ordering</td>
+            <td class="col-old"><span class="cross">Not connected</span></td>
+            <td class="col-new"><span class="check">Every product card</span></td>
+          </tr>
+          <tr data-delay="2">
+            <td>Mobile Design</td>
+            <td class="col-old"><span class="cross">Broken on phones</span></td>
+            <td class="col-new"><span class="check">Mobile-first, perfect</span></td>
+          </tr>
+          <tr data-delay="3">
+            <td>SEO / Link Previews</td>
+            <td class="col-old"><span class="cross">No meta tags</span></td>
+            <td class="col-new"><span class="check">Looks great when shared</span></td>
+          </tr>
+          <tr data-delay="4">
+            <td>Customer Reviews</td>
+            <td class="col-old"><span class="cross">None visible</span></td>
+            <td class="col-new"><span class="check">Infinite scrolling marquee</span></td>
+          </tr>
+          <tr data-delay="5">
+            <td>Brand Typography</td>
+            <td class="col-old"><span class="cross">Default system fonts</span></td>
+            <td class="col-new"><span class="check">Premium brand fonts</span></td>
+          </tr>
+          <tr data-delay="6">
+            <td>Animations</td>
+            <td class="col-old"><span class="cross">Static, no movement</span></td>
+            <td class="col-new"><span class="check">Smooth animated scrolling</span></td>
+          </tr>
+          <tr data-delay="7" style="transition-delay: 420ms !important;">
+            <td>Product Presentation</td>
+            <td class="col-old"><span class="cross">Basic list or photos</span></td>
+            <td class="col-new"><span class="check">Zoom, quick view, star ratings</span></td>
+          </tr>
+          <tr data-delay="7" style="transition-delay: 480ms !important;">
+            <td>Trust Signals</td>
+            <td class="col-old"><span class="cross">Nothing to build trust</span></td>
+            <td class="col-new"><span class="check">Stats, reviews, trust bar</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────── -->
+  <!-- SLIDE 9 — CTA                       -->
+  <!-- ─────────────────────────────────── -->
+  <section class="slide s-cta" id="slide-8">
+    <div class="blobs">
+      <div class="blob blob-1" style="animation-delay:-4s;"></div>
+      <div class="blob blob-2" style="animation-delay:-12s;"></div>
+      <div class="blob blob-3" style="animation-delay:-20s;"></div>
+    </div>
+    <div class="cta-inner">
+      <div class="cta-tag"><span></span> Ready to Launch <span></span></div>
+      <h2 class="cta-h">Your Brand Deserves<br>a Website <em>This Good</em></h2>
+      <p class="cta-sub">Asli Mills products are natural, high quality, and made with care. Now the website finally matches that standard — and starts bringing in customers the moment it goes live.</p>
+
+      <div class="cta-actions">
+        <a href="https://horumar-solution.github.io/asli-mills/" class="btn-gold" target="_blank" rel="noopener">View the Live Site →</a>
+        <a href="https://horumar-solution.github.io/Abeer-Abdallah-Jama.index.html" target="_blank" rel="noopener" class="btn-ghost">Horumar Solution Portfolio →</a>
+      </div>
+      <p class="cta-credit">Designed by &nbsp;<svg width="86" height="20" viewBox="0 0 86 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin:0 4px -2px;"><rect width="86" height="20" rx="10" fill="#2563EB"/><circle cx="11" cy="10" r="6.5" fill="white"/><circle cx="11" cy="10" r="3.5" fill="#2563EB"/><text x="21" y="14.5" font-family="Montserrat,sans-serif" font-size="10" font-weight="700" fill="white">horumar</text></svg>&nbsp; Horumar Solution &nbsp;·&nbsp; abeerabdallah091@gmail.com</p>
+    </div>
+  </section>
+
+  <script>
+    // ── NAV DOTS + PROGRESS + COUNTER ──────────
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+    const progressBar = document.getElementById('progressBar');
+    const slideCounter = document.getElementById('slideCounter');
+    let activeSlide = 0;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = [...slides].indexOf(entry.target);
+          activeSlide = idx;
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+          const progress = ((idx + 1) / slides.length) * 100;
+          progressBar.style.width = progress + '%';
+          slideCounter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+        }
+      });
+    }, { threshold: 0.5 });
+
+    slides.forEach(s => observer.observe(s));
+
+    // Dot click → scroll to slide
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.dataset.slide);
+        slides[idx].scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ── SCROLL REVEAL ──────────────────────────
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('vis');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll(
+      '.old-item, .feat-card, .anim-card, .seo-card, .wa-phone, #mobileMockup, .compare-table tbody tr'
+    ).forEach(el => revealObs.observe(el));
+
+    // ── SCROLL LINE DEMO ────────────────────────
+    const scrollLine = document.getElementById('scrollLine');
+    const lineObs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setTimeout(() => scrollLine.classList.add('vis'), 300);
+      } else {
+        scrollLine.classList.remove('vis');
+      }
+    }, { threshold: 0.5 });
+    lineObs.observe(scrollLine);
+
+    // ── WHATSAPP CHAT ANIMATION ─────────────────
+    const waPhone = document.getElementById('waPhone');
+    const waMessages = document.querySelectorAll('#waChat .wa-msg');
+    const waTyping  = document.getElementById('waTyping');
+    let chatAnimated = false;
+
+    const waObs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !chatAnimated) {
+        chatAnimated = true;
+        waPhone.classList.add('vis');
+
+        waMessages.forEach((msg, i) => {
+          const isOut = msg.classList.contains('out');
+          // show typing dots before each outgoing reply
+          if (isOut && waTyping) {
+            setTimeout(() => { waTyping.classList.add('vis'); }, i * 700 + 300);
+            setTimeout(() => { waTyping.classList.remove('vis'); msg.classList.add('vis'); }, i * 700 + 900);
+          } else {
+            setTimeout(() => msg.classList.add('vis'), i * 700 + 500);
+          }
+        });
+      }
+    }, { threshold: 0.4 });
+    waObs.observe(waPhone);
+  </script>
+</body>
+</html>

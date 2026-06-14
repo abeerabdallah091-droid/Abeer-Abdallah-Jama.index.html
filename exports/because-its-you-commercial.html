@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Because It's You — Emporio Armani</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose-gold: #C8956C;
+    --rose-gold-light: #D4A574;
+    --champagne: #F5E6D3;
+    --amber: #C9A84C;
+    --amber-dark: #D4884A;
+    --crimson: #8B1A2F;
+    --black: #0A0A0A;
+    --gold: #FFD700;
+    --gold-soft: #E8B84B;
+    --silver: #C0C0C0;
+    --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  #stage {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  canvas#particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* BACKGROUND LAYERS */
+  .bg-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease-luxury);
+    z-index: 1;
+  }
+  .bg-layer.active { opacity: 1; }
+
+  #bg-1 { background: radial-gradient(ellipse at 50% 60%, #2a0d0d 0%, #0A0A0A 70%); }
+  #bg-2 { background: radial-gradient(ellipse at 50% 40%, #1a0808 0%, #0A0A0A 80%); }
+  #bg-3 { background: radial-gradient(ellipse at 50% 50%, #3d1a0a 0%, #1a0505 50%, #0A0A0A 100%); }
+  #bg-4 { background: radial-gradient(ellipse at 50% 50%, #5c1a0f 0%, #2a0808 50%, #0A0A0A 100%); }
+  #bg-5 { background: radial-gradient(ellipse at 50% 50%, #4a1a10 0%, #1a0808 60%, #0A0A0A 100%); }
+  #bg-6 { background: radial-gradient(ellipse at 50% 40%, #2a1205 0%, #1a0808 40%, #0A0A0A 80%); }
+
+  /* BOTTLE CONTAINER */
+  #bottle-wrap {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+  }
+
+  #bottle-svg {
+    filter: drop-shadow(0 0 40px rgba(200,149,108,0.3)) drop-shadow(0 0 80px rgba(200,149,108,0.15));
+    transform-origin: center center;
+  }
+
+  /* SCENE ANIMATIONS */
+  .scene { position: absolute; inset: 0; opacity: 0; pointer-events: none; z-index: 15; transition: opacity 0.8s var(--ease-luxury); display: flex; align-items: center; justify-content: center; }
+  .scene.active { opacity: 1; pointer-events: auto; }
+
+  /* INGREDIENTS SCENE */
+  #scene-ingredients {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .ingredient {
+    position: absolute;
+    opacity: 0;
+    animation: floatIngredient 4s var(--ease-luxury) forwards;
+  }
+
+  @keyframes floatIngredient {
+    0% { opacity: 0; transform: translateY(40px) scale(0.6) rotate(-10deg); }
+    30% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-60px) scale(1) rotate(10deg); }
+  }
+
+  /* SPLASH SCENE */
+  #scene-splash {
+    overflow: hidden;
+  }
+
+  .splash-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: blobPulse 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes blobPulse {
+    0% { transform: scale(1) rotate(0deg); }
+    100% { transform: scale(1.15) rotate(15deg); }
+  }
+
+  .silk-wave {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: -50%;
+    top: -50%;
+    animation: silkFlow 3s ease-in-out infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes silkFlow {
+    0% { transform: rotate(0deg) scaleX(1); }
+    50% { transform: rotate(5deg) scaleX(1.05); }
+    100% { transform: rotate(0deg) scaleX(1); }
+  }
+
+  /* MIST EFFECT */
+  .mist-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,230,211,0.3) 0%, transparent 70%);
+    animation: mistDrift linear forwards;
+    pointer-events: none;
+  }
+
+  @keyframes mistDrift {
+    0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(-80px) translateX(var(--drift-x, 20px)) scale(1.5); opacity: 0; }
+  }
+
+  /* TYPOGRAPHY */
+  #final-title {
+    position: absolute;
+    bottom: 18%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s var(--ease-luxury);
+  }
+  #final-title.visible { opacity: 1; }
+
+  #final-title .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 3vw, 2.6rem);
+    color: var(--champagne);
+    letter-spacing: 0.25em;
+    display: block;
+    animation: titleReveal 2s var(--ease-luxury) forwards;
+    opacity: 0;
+  }
+
+  #final-title .brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: clamp(0.55rem, 1.1vw, 0.95rem);
+    color: var(--rose-gold-light);
+    letter-spacing: 0.6em;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 14px;
+    animation: titleReveal 2s 0.7s var(--ease-luxury) forwards;
+    opacity: 0;
+  }
+
+  @keyframes titleReveal {
+    0% { opacity: 0; letter-spacing: 0.6em; transform: translateY(12px); }
+    100% { opacity: 1; letter-spacing: 0.25em; transform: translateY(0); }
+  }
+
+  #final-title .brand { letter-spacing: 0.6em; }
+  @keyframes brandReveal {
+    0% { opacity: 0; letter-spacing: 0.9em; transform: translateY(8px); }
+    100% { opacity: 1; letter-spacing: 0.6em; transform: translateY(0); }
+  }
+  #final-title .brand { animation-name: brandReveal; }
+
+  /* GLOW PULSE ON BOTTLE */
+  @keyframes glowPulse {
+    0%, 100% { filter: drop-shadow(0 0 30px rgba(200,149,108,0.25)) drop-shadow(0 0 60px rgba(200,149,108,0.1)); }
+    50% { filter: drop-shadow(0 0 60px rgba(200,149,108,0.5)) drop-shadow(0 0 120px rgba(200,149,108,0.25)); }
+  }
+
+  @keyframes bottleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes bottleIntro {
+    0% { opacity: 0; transform: scale(0.7) translateY(30px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* SHIMMER SWEEP */
+  .shimmer-sweep {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    animation: shimmerMove 2.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 5;
+    border-radius: inherit;
+  }
+  @keyframes shimmerMove {
+    0% { left: -100%; }
+    100% { left: 150%; }
+  }
+
+  /* CONDENSATION */
+  .droplet {
+    position: absolute;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.8), rgba(200,210,220,0.3));
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
+    animation: dropletAppear 1s var(--ease-luxury) forwards;
+    opacity: 0;
+  }
+  @keyframes dropletAppear {
+    0% { opacity: 0; transform: scale(0); }
+    60% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.7; transform: scale(1); }
+  }
+
+  /* SCENE INDICATOR */
+  #scene-dots {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 50;
+  }
+  .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: rgba(200,149,108,0.3);
+    transition: background 0.4s ease, transform 0.4s ease;
+  }
+  .dot.active { background: var(--rose-gold); transform: scale(1.4); }
+
+  /* REPLAY */
+  #replay-btn {
+    position: absolute;
+    bottom: 7%;
+    right: 5%;
+    z-index: 60;
+    background: none;
+    border: 1px solid rgba(200,149,108,0.4);
+    color: var(--rose-gold);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    padding: 8px 18px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 1s ease, border-color 0.3s ease;
+    text-transform: uppercase;
+  }
+  #replay-btn:hover { border-color: var(--rose-gold); background: rgba(200,149,108,0.08); }
+  #replay-btn.visible { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- Background layers -->
+  <div class="bg-layer active" id="bg-1"></div>
+  <div class="bg-layer" id="bg-2"></div>
+  <div class="bg-layer" id="bg-3"></div>
+  <div class="bg-layer" id="bg-4"></div>
+  <div class="bg-layer" id="bg-5"></div>
+  <div class="bg-layer" id="bg-6"></div>
+
+  <!-- Particle canvas -->
+  <canvas id="particles"></canvas>
+
+  <!-- Splash scene (behind bottle) -->
+  <div class="scene" id="scene-splash"></div>
+
+  <!-- Ingredients scene -->
+  <div class="scene" id="scene-ingredients"></div>
+
+  <!-- Bottle (persistent center element) -->
+  <div id="bottle-wrap">
+    <svg id="bottle-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 420" width="220" height="370">
+      <defs>
+        <!-- Glass body gradient -->
+        <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#d4c5b0" stop-opacity="0.55"/>
+          <stop offset="18%" stop-color="#f0e8dc" stop-opacity="0.25"/>
+          <stop offset="40%" stop-color="#fff8f0" stop-opacity="0.1"/>
+          <stop offset="60%" stop-color="#f0e8dc" stop-opacity="0.2"/>
+          <stop offset="82%" stop-color="#c8b89a" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#a09070" stop-opacity="0.6"/>
+        </linearGradient>
+
+        <!-- Liquid fill gradient — pale champagne-yellow matching reference -->
+        <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f5dfa0" stop-opacity="0.92"/>
+          <stop offset="30%" stop-color="#e8cc78" stop-opacity="0.88"/>
+          <stop offset="65%" stop-color="#d9b850" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#c9a030" stop-opacity="0.88"/>
+        </linearGradient>
+
+        <!-- Liquid shimmer -->
+        <linearGradient id="liquidShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="transparent"/>
+          <stop offset="40%" stop-color="rgba(255,248,210,0.35)"/>
+          <stop offset="55%" stop-color="rgba(255,252,225,0.5)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
+
+        <!-- Cap gradient - deep black with silver rim highlight matching reference -->
+        <radialGradient id="capGrad" cx="35%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#6a6a6a"/>
+          <stop offset="18%" stop-color="#2e2e2e"/>
+          <stop offset="40%" stop-color="#0a0a0a"/>
+          <stop offset="70%" stop-color="#050505"/>
+          <stop offset="100%" stop-color="#181818"/>
+        </radialGradient>
+
+        <!-- Silver neck ring gradient -->
+        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e8e8e8"/>
+          <stop offset="20%" stop-color="#b0b0b0"/>
+          <stop offset="40%" stop-color="#d8d8d8"/>
+          <stop offset="60%" stop-color="#888888"/>
+          <stop offset="80%" stop-color="#c0c0c0"/>
+          <stop offset="100%" stop-color="#a0a0a0"/>
+        </linearGradient>
+
+        <!-- Rim glow filter -->
+        <filter id="rimGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+
+        <!-- Glass edge highlight -->
+        <linearGradient id="edgeHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.8)"/>
+          <stop offset="8%" stop-color="rgba(255,255,255,0.1)"/>
+          <stop offset="92%" stop-color="rgba(255,255,255,0.05)"/>
+          <stop offset="100%" stop-color="rgba(200,180,150,0.6)"/>
+        </linearGradient>
+
+        <!-- Inner glass thickness -->
+        <linearGradient id="glassThickness" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(180,160,130,0.4)"/>
+          <stop offset="10%" stop-color="rgba(255,255,255,0.05)"/>
+          <stop offset="90%" stop-color="rgba(255,255,255,0.02)"/>
+          <stop offset="100%" stop-color="rgba(150,130,100,0.35)"/>
+        </linearGradient>
+
+        <!-- Refraction highlight inside liquid - soft champagne glow -->
+        <linearGradient id="refractionGrad" x1="15%" y1="10%" x2="55%" y2="80%">
+          <stop offset="0%" stop-color="rgba(255,252,230,0.65)"/>
+          <stop offset="60%" stop-color="rgba(240,220,160,0.2)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </linearGradient>
+
+        <!-- Bottom reflection -->
+        <linearGradient id="bottomReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="rgba(220,170,80,0.3)"/>
+          <stop offset="100%" stop-color="rgba(180,130,40,0.1)"/>
+        </linearGradient>
+
+        <!-- Clip path for liquid -->
+        <clipPath id="bottleClip">
+          <rect x="28" y="135" width="204" height="255" rx="18" ry="18"/>
+        </clipPath>
+
+        <!-- Neck clip -->
+        <clipPath id="neckClip">
+          <rect x="90" y="90" width="80" height="50"/>
+        </clipPath>
+
+        <!-- Glow filter -->
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="8" result="glow"/>
+          <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- BOTTLE BASE SHADOW -->
+      <ellipse cx="130" cy="400" rx="80" ry="10" fill="rgba(0,0,0,0.5)"/>
+
+      <!-- GLASS BODY OUTER SHAPE (with rounded corners) -->
+      <rect x="28" y="135" width="204" height="255" rx="20" ry="20"
+            fill="url(#glassGrad)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+      <!-- LIQUID FILL (inside bottle) -->
+      <g clip-path="url(#bottleClip)">
+        <rect x="32" y="138" width="196" height="248" rx="16" ry="16" fill="url(#liquidGrad)"/>
+        <!-- Liquid shimmer overlay -->
+        <rect x="32" y="138" width="196" height="248" rx="16" ry="16" fill="url(#liquidShimmer)"/>
+        <!-- Light refraction spot -->
+        <ellipse cx="95" cy="190" rx="40" ry="25" fill="url(#refractionGrad)"/>
+        <!-- Bottom warm glow -->
+        <rect x="32" y="340" width="196" height="46" rx="0" ry="0" fill="url(#bottomReflect)"/>
+      </g>
+
+      <!-- GLASS BODY OVERLAY (glass texture on top of liquid) -->
+      <rect x="28" y="135" width="204" height="255" rx="20" ry="20"
+            fill="url(#glassThickness)" stroke="none"/>
+
+      <!-- LEFT GLASS EDGE HIGHLIGHT -->
+      <rect x="28" y="140" width="6" height="245" rx="3"
+            fill="rgba(255,255,255,0.25)"/>
+      <!-- RIGHT GLASS EDGE SHADOW -->
+      <rect x="226" y="140" width="6" height="245" rx="3"
+            fill="rgba(120,90,60,0.3)"/>
+
+      <!-- TOP GLASS EDGE -->
+      <rect x="34" y="135" width="192" height="5" rx="2"
+            fill="rgba(255,255,255,0.2)"/>
+
+      <!-- BRAND TEXT ON BOTTLE -->
+      <text x="130" y="240" text-anchor="middle"
+            font-family="'Cormorant Garamond', serif"
+            font-style="italic"
+            font-weight="300"
+            font-size="11"
+            fill="rgba(20,10,5,0.75)"
+            letter-spacing="1">Because It's</text>
+      <text x="130" y="270" text-anchor="middle"
+            font-family="'Cormorant Garamond', serif"
+            font-weight="400"
+            font-size="28"
+            fill="rgba(15,8,2,0.8)"
+            letter-spacing="2">YOU</text>
+      <!-- Decorative line under YOU -->
+      <line x1="95" y1="278" x2="165" y2="278" stroke="rgba(20,10,5,0.4)" stroke-width="0.5"/>
+
+      <text x="130" y="350" text-anchor="middle"
+            font-family="'Montserrat', sans-serif"
+            font-weight="300"
+            font-size="7"
+            fill="rgba(20,10,5,0.65)"
+            letter-spacing="3">EMPORIO ARMANI</text>
+      <!-- Eagle symbol approximation -->
+      <text x="130" y="341" text-anchor="middle"
+            font-family="'Cormorant Garamond', serif"
+            font-size="8"
+            fill="rgba(20,10,5,0.5)"
+            letter-spacing="0">✦</text>
+
+      <!-- GLASS BODY SPECULAR HIGHLIGHT (top-left bright spot) -->
+      <ellipse cx="75" cy="175" rx="22" ry="30"
+               fill="rgba(255,255,255,0.12)" transform="rotate(-15,75,175)"/>
+      <ellipse cx="68" cy="168" rx="8" ry="14"
+               fill="rgba(255,255,255,0.18)" transform="rotate(-15,68,168)"/>
+
+      <!-- NECK AREA -->
+      <rect x="93" y="100" width="74" height="40" rx="6" ry="6"
+            fill="url(#glassGrad)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+      <!-- Neck liquid -->
+      <rect x="97" y="103" width="66" height="34" rx="4"
+            fill="url(#liquidGrad)" opacity="0.7"/>
+      <!-- Neck glass overlay -->
+      <rect x="93" y="100" width="74" height="40" rx="6"
+            fill="url(#glassThickness)"/>
+
+      <!-- SILVER NECK RINGS (decorative wrapping) -->
+      <!-- Ring group -->
+      <g>
+        <rect x="88" y="88" width="84" height="6" rx="2" fill="url(#ringGrad)"/>
+        <rect x="88" y="94" width="84" height="4" rx="1" fill="url(#ringGrad)" opacity="0.8"/>
+        <rect x="88" y="98" width="84" height="5" rx="1.5" fill="url(#ringGrad)"/>
+        <rect x="88" y="103" width="84" height="3" rx="1" fill="url(#ringGrad)" opacity="0.7"/>
+        <!-- Ring highlights -->
+        <rect x="88" y="88" width="84" height="1.5" rx="0.5" fill="rgba(255,255,255,0.6)"/>
+        <rect x="88" y="94" width="84" height="1" fill="rgba(255,255,255,0.4)"/>
+        <rect x="88" y="98" width="84" height="1" fill="rgba(255,255,255,0.5)"/>
+        <!-- Ring shadows -->
+        <rect x="88" y="91" width="84" height="2" fill="rgba(0,0,0,0.25)"/>
+        <rect x="88" y="101" width="84" height="1.5" fill="rgba(0,0,0,0.2)"/>
+      </g>
+
+      <!-- CAP STEM (connecting cap to rings) -->
+      <rect x="105" y="55" width="50" height="38" rx="4" fill="#1a1a1a"/>
+      <rect x="107" y="56" width="14" height="36" rx="2"
+            fill="rgba(255,255,255,0.08)"/>
+
+      <!-- SPHERICAL CAP -->
+      <circle cx="130" cy="42" r="36" fill="url(#capGrad)"/>
+      <!-- Cap specular highlights -->
+      <ellipse cx="118" cy="30" rx="10" ry="8"
+               fill="rgba(255,255,255,0.22)" transform="rotate(-20,118,30)"/>
+      <ellipse cx="114" cy="27" rx="4" ry="3"
+               fill="rgba(255,255,255,0.35)" transform="rotate(-20,114,27)"/>
+      <!-- Cap edge rim -->
+      <circle cx="130" cy="42" r="36"
+              fill="none" stroke="rgba(80,80,80,0.6)" stroke-width="1.5"/>
+      <!-- Cap bottom rim silver ring -->
+      <ellipse cx="130" cy="76" rx="25" ry="4"
+               fill="url(#ringGrad)" opacity="0.9"/>
+
+      <!-- BOTTLE BOTTOM EDGE -->
+      <rect x="28" y="383" width="204" height="7" rx="4"
+            fill="rgba(180,150,100,0.4)"/>
+      <rect x="32" y="387" width="196" height="3" rx="2"
+            fill="rgba(255,255,255,0.1)"/>
+
+      <!-- SURFACE REFLECTION ON BOTTOM (floor reflection) -->
+      <ellipse cx="130" cy="396" rx="90" ry="6"
+               fill="url(#liquidGrad)" opacity="0.12"/>
+    </svg>
+    <!-- Shimmer sweep overlay on bottle -->
+    <div class="shimmer-sweep" style="position:absolute;inset:0;border-radius:12px;"></div>
+  </div>
+
+  <!-- Mist container -->
+  <div id="mist-container" style="position:absolute;inset:0;pointer-events:none;z-index:18;"></div>
+
+  <!-- Final typography -->
+  <div id="final-title">
+    <span class="tagline">Because It's You</span>
+    <span class="brand">Emporio &nbsp;Armani</span>
+  </div>
+
+  <!-- Scene indicator dots -->
+  <div id="scene-dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <button id="replay-btn" onclick="initCommercial()">&#x21BA; Replay</button>
+</div>
+
+<script>
+// ─── PARTICLE SYSTEM ───────────────────────────────────────────────────────
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], frameId;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor(type = 'gold') {
+    this.type = type;
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = H + 10;
+    this.size = this.type === 'gold' ? Math.random() * 3 + 1 : Math.random() * 5 + 2;
+    this.speedY = -(Math.random() * 0.8 + 0.3);
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.life = 0;
+    this.maxLife = Math.random() * 200 + 150;
+    this.alpha = 0;
+    this.twinkle = Math.random() * Math.PI * 2;
+    this.twinkleSpeed = Math.random() * 0.05 + 0.02;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.life++;
+    this.twinkle += this.twinkleSpeed;
+    const t = this.life / this.maxLife;
+    this.alpha = t < 0.15 ? t / 0.15 : t > 0.8 ? (1 - t) / 0.2 : 1;
+    this.alpha *= 0.7 + 0.3 * Math.sin(this.twinkle);
+    if (this.life >= this.maxLife || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha * (this.type === 'gold' ? 0.9 : 0.5);
+    if (this.type === 'gold') {
+      ctx.fillStyle = Math.random() > 0.5 ? '#FFD700' : '#E8B84B';
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = '#FFD700';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+      grad.addColorStop(0, 'rgba(200,149,108,0.6)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+let particleCount = 0;
+let particleType = 'gold';
+
+function spawnParticles(count, type) {
+  particleType = type || 'gold';
+  particleCount = count;
+  while (particles.length < count) particles.push(new Particle(particleType));
+  while (particles.length > count) particles.pop();
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  frameId = requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+
+// ─── SCENE MANAGER ─────────────────────────────────────────────────────────
+const scenes = {
+  bgs: document.querySelectorAll('.bg-layer'),
+  dots: document.querySelectorAll('.dot'),
+  bottle: document.getElementById('bottle-wrap'),
+  bottleSvg: document.getElementById('bottle-svg'),
+  splashScene: document.getElementById('scene-splash'),
+  ingredientsScene: document.getElementById('scene-ingredients'),
+  finalTitle: document.getElementById('final-title'),
+  mist: document.getElementById('mist-container'),
+  replayBtn: document.getElementById('replay-btn'),
+};
+
+let currentScene = 0;
+let sceneTimeout = null;
+let mistInterval = null;
+
+function switchBg(index) {
+  scenes.bgs.forEach((b, i) => b.classList.toggle('active', i === index));
+}
+
+function updateDots(index) {
+  scenes.dots.forEach((d, i) => d.classList.toggle('active', i === index));
+}
+
+function clearScene() {
+  scenes.splashScene.classList.remove('active');
+  scenes.ingredientsScene.classList.remove('active');
+  if (mistInterval) clearInterval(mistInterval);
+  scenes.mist.innerHTML = '';
+}
+
+
+// ─── SCENE 1: OPENING ──────────────────────────────────────────────────────
+function scene1() {
+  currentScene = 0;
+  switchBg(0);
+  updateDots(0);
+  clearScene();
+
+  scenes.finalTitle.classList.remove('visible');
+  scenes.replayBtn.classList.remove('visible');
+  spawnParticles(35, 'gold');
+
+  // Bottle intro animation
+  scenes.bottle.style.transition = 'transform 2.5s cubic-bezier(0.22,1,0.36,1), opacity 1.5s ease';
+  scenes.bottle.style.opacity = '0';
+  scenes.bottle.style.transform = 'scale(0.75) translateY(40px)';
+
+  setTimeout(() => {
+    scenes.bottle.style.opacity = '1';
+    scenes.bottle.style.transform = 'scale(1) translateY(0)';
+    scenes.bottleSvg.style.animation = 'glowPulse 3s ease-in-out infinite, bottleFloat 4s ease-in-out infinite';
+  }, 200);
+
+  sceneTimeout = setTimeout(scene2, 3500);
+}
+
+
+// ─── SCENE 2: CAP MACRO ────────────────────────────────────────────────────
+function scene2() {
+  currentScene = 1;
+  switchBg(1);
+  updateDots(1);
+  clearScene();
+  spawnParticles(20, 'gold');
+
+  // Zoom into cap
+  scenes.bottle.style.transition = 'transform 1.8s cubic-bezier(0.22,1,0.36,1)';
+  scenes.bottle.style.transform = 'scale(2.2) translateY(25%)';
+
+  // Spawn condensation droplets
+  setTimeout(() => {
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => addDroplet(), i * 180);
+    }
+  }, 600);
+
+  sceneTimeout = setTimeout(scene3, 3500);
+}
+
+function addDroplet() {
+  const d = document.createElement('div');
+  d.className = 'droplet';
+  const w = Math.random() * 6 + 3;
+  const h = w * (1.2 + Math.random() * 0.4);
+  d.style.cssText = `
+    width:${w}px; height:${h}px;
+    left:${40 + Math.random() * 180}px;
+    top:${120 + Math.random() * 200}px;
+    position:absolute; z-index:25;
+    animation-delay:${Math.random() * 0.3}s;
+  `;
+  scenes.bottle.appendChild(d);
+  setTimeout(() => d.remove(), 3000);
+}
+
+
+// ─── SCENE 3: INGREDIENTS ──────────────────────────────────────────────────
+function scene3() {
+  currentScene = 2;
+  switchBg(2);
+  updateDots(2);
+  clearScene();
+  spawnParticles(50, 'gold');
+
+  scenes.bottle.style.transition = 'transform 1.5s cubic-bezier(0.22,1,0.36,1)';
+  scenes.bottle.style.transform = 'scale(0.7) translateY(10%)';
+
+  scenes.ingredientsScene.classList.add('active');
+  const items = buildIngredients();
+  items.forEach((el, i) => {
+    setTimeout(() => scenes.ingredientsScene.appendChild(el), i * 250);
+  });
+
+  sceneTimeout = setTimeout(scene4, 4500);
+}
+
+function buildIngredients() {
+  const defs = [
+    { type: 'petal', color: '#e8748a', x: '20%', y: '30%', size: 38 },
+    { type: 'petal', color: '#d45a72', x: '75%', y: '20%', size: 30 },
+    { type: 'petal', color: '#c94060', x: '15%', y: '65%', size: 42 },
+    { type: 'petal', color: '#e88098', x: '80%', y: '60%', size: 28 },
+    { type: 'drop',  color: '#d4300a', x: '35%', y: '15%', size: 18 },
+    { type: 'drop',  color: '#cc2200', x: '65%', y: '75%', size: 14 },
+    { type: 'blob',  color: '#e8c87a', x: '55%', y: '20%', size: 22 },
+    { type: 'blob',  color: '#d4a84a', x: '25%', y: '75%', size: 16 },
+    { type: 'flower',color: '#f5e6d3', x: '70%', y: '40%', size: 28 },
+    { type: 'flower',color: '#ead4c0', x: '12%', y: '45%', size: 22 },
+  ];
+
+  return defs.map(def => {
+    const el = document.createElement('div');
+    el.className = 'ingredient';
+    el.style.left = def.x;
+    el.style.top = def.y;
+    el.style.animationDelay = `${Math.random() * 0.5}s`;
+    el.style.animationDuration = `${3 + Math.random() * 1.5}s`;
+
+    if (def.type === 'petal') {
+      el.innerHTML = `<svg width="${def.size}" height="${def.size * 1.4}" viewBox="0 0 40 56">
+        <ellipse cx="20" cy="30" rx="14" ry="22" fill="${def.color}" opacity="0.85" transform="rotate(-15,20,30)"/>
+        <ellipse cx="20" cy="30" rx="6" ry="14" fill="rgba(255,255,255,0.25)" transform="rotate(-15,20,30)"/>
+        <line x1="20" y1="14" x2="20" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+      </svg>`;
+    } else if (def.type === 'drop') {
+      el.innerHTML = `<svg width="${def.size}" height="${def.size*1.4}" viewBox="0 0 20 28">
+        <path d="M10 2 C10 2 2 12 2 18 A8 8 0 0 0 18 18 C18 12 10 2 10 2Z" fill="${def.color}" opacity="0.9"/>
+        <ellipse cx="7" cy="15" rx="2" ry="3.5" fill="rgba(255,255,255,0.35)" transform="rotate(-20,7,15)"/>
+      </svg>`;
+    } else if (def.type === 'blob') {
+      el.innerHTML = `<svg width="${def.size*1.5}" height="${def.size}" viewBox="0 0 36 24">
+        <ellipse cx="18" cy="12" rx="16" ry="10" fill="${def.color}" opacity="0.75"/>
+        <ellipse cx="14" cy="9" rx="5" ry="3.5" fill="rgba(255,255,255,0.3)" transform="rotate(-25,14,9)"/>
+      </svg>`;
+    } else {
+      el.innerHTML = `<svg width="${def.size}" height="${def.size}" viewBox="0 0 40 40">
+        ${[0,60,120,180,240,300].map(a => `<ellipse cx="20" cy="20" rx="7" ry="14" fill="${def.color}" opacity="0.8" transform="rotate(${a},20,20) translate(0,-7)"/>`).join('')}
+        <circle cx="20" cy="20" r="4" fill="#e8c87a" opacity="0.9"/>
+      </svg>`;
+    }
+    return el;
+  });
+}
+
+
+// ─── SCENE 4: LIQUID EXPLOSION ─────────────────────────────────────────────
+function scene4() {
+  currentScene = 3;
+  switchBg(3);
+  updateDots(3);
+  clearScene();
+  spawnParticles(60, 'rose');
+
+  scenes.bottle.style.transition = 'transform 1.2s cubic-bezier(0.22,1,0.36,1)';
+  scenes.bottle.style.transform = 'scale(0.9) translateY(0)';
+
+  buildSplash();
+  scenes.splashScene.classList.add('active');
+
+  sceneTimeout = setTimeout(scene5, 4000);
+}
+
+function buildSplash() {
+  scenes.splashScene.innerHTML = '';
+  const blobs = [
+    { w: 380, h: 280, x: '-5%', y: '20%', color: '#C8956C', opacity: 0.7, delay: 0 },
+    { w: 260, h: 200, x: '55%', y: '10%', color: '#D4884A', opacity: 0.6, delay: 0.3 },
+    { w: 200, h: 320, x: '-10%', y: '40%', color: '#8B1A2F', opacity: 0.45, delay: 0.15 },
+    { w: 300, h: 180, x: '40%', y: '55%', color: '#C9A84C', opacity: 0.55, delay: 0.2 },
+    { w: 160, h: 260, x: '70%', y: '35%', color: '#D4A574', opacity: 0.5, delay: 0.4 },
+  ];
+
+  blobs.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'splash-blob';
+    div.style.cssText = `
+      width:${b.w}px; height:${b.h}px;
+      left:${b.x}; top:${b.y};
+      background: radial-gradient(ellipse at 40% 40%, ${b.color}${Math.round(b.opacity*255).toString(16).padStart(2,'0')}, transparent 70%);
+      border-radius: ${40+Math.random()*30}% ${50+Math.random()*20}% ${35+Math.random()*30}% ${45+Math.random()*25}% / ${40+Math.random()*20}% ${45+Math.random()*25}% ${50+Math.random()*20}% ${40+Math.random()*25}%;
+      animation-delay: ${b.delay}s;
+      animation-duration: ${2+Math.random()}s;
+    `;
+    scenes.splashScene.appendChild(div);
+  });
+
+  // Silk wave SVG
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 800 600');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.classList.add('silk-wave');
+  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="waveGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#C8956C" stop-opacity="0.35"/>
+        <stop offset="50%" stop-color="#D4A574" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#8B1A2F" stop-opacity="0.2"/>
+      </linearGradient>
+      <linearGradient id="waveGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#D4884A" stop-opacity="0.2"/>
+      </linearGradient>
+    </defs>
+    <path d="M-100,500 C100,350 200,200 400,250 C600,300 700,400 900,300 L900,700 L-100,700Z"
+          fill="url(#waveGrad1)">
+      <animateTransform attributeName="transform" type="translate" values="0,0;30,-20;0,0" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M-100,400 C150,320 300,450 500,380 C700,310 750,250 900,350 L900,700 L-100,700Z"
+          fill="url(#waveGrad2)" opacity="0.7">
+      <animateTransform attributeName="transform" type="translate" values="0,0;-20,15;0,0" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+  `;
+  scenes.splashScene.appendChild(svg);
+}
+
+
+// ─── SCENE 5: GLASS CLOSE-UP ───────────────────────────────────────────────
+function scene5() {
+  currentScene = 4;
+  switchBg(4);
+  updateDots(4);
+  clearScene();
+  spawnParticles(30, 'gold');
+
+  scenes.bottle.style.transition = 'transform 1.8s cubic-bezier(0.22,1,0.36,1)';
+  scenes.bottle.style.transform = 'scale(2.8) translateY(8%)';
+
+  // Mist particles
+  mistInterval = setInterval(() => {
+    if (currentScene === 4) spawnMist();
+  }, 300);
+
+  sceneTimeout = setTimeout(scene6, 3500);
+}
+
+function spawnMist() {
+  for (let i = 0; i < 3; i++) {
+    const m = document.createElement('div');
+    m.className = 'mist-particle';
+    const size = Math.random() * 80 + 40;
+    const x = 30 + Math.random() * 40;
+    const driftX = (Math.random() - 0.5) * 60;
+    m.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:calc(${x}% - ${size/2}px);
+      bottom:${20 + Math.random() * 30}%;
+      --drift-x: ${driftX}px;
+      animation-duration: ${2 + Math.random() * 2}s;
+      animation-delay: ${Math.random() * 0.5}s;
+    `;
+    scenes.mist.appendChild(m);
+    setTimeout(() => m.remove(), 4000);
+  }
+}
+
+
+// ─── SCENE 6: HERO FINAL ───────────────────────────────────────────────────
+function scene6() {
+  currentScene = 5;
+  switchBg(5);
+  updateDots(5);
+  clearScene();
+  spawnParticles(70, 'gold');
+
+  scenes.bottle.style.transition = 'transform 2.5s cubic-bezier(0.22,1,0.36,1)';
+  scenes.bottle.style.transform = 'scale(1) translateY(0)';
+  scenes.bottleSvg.style.animation = 'glowPulse 2s ease-in-out infinite, bottleFloat 5s ease-in-out infinite';
+
+  // Silk flowing background via SVG
+  buildHeroBackground();
+
+  // Typography
+  setTimeout(() => {
+    scenes.finalTitle.classList.add('visible');
+  }, 1200);
+
+  // Fade particles out near end
+  setTimeout(() => {
+    spawnParticles(0, 'gold');
+  }, 6000);
+
+  // Replay button
+  setTimeout(() => {
+    scenes.replayBtn.classList.add('visible');
+  }, 5000);
+}
+
+function buildHeroBackground() {
+  const existing = document.getElementById('hero-bg-svg');
+  if (existing) existing.remove();
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.id = 'hero-bg-svg';
+  svg.setAttribute('viewBox', '0 0 800 600');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;';
+  svg.innerHTML = `
+    <defs>
+      <radialGradient id="heroGlow" cx="50%" cy="50%" r="60%">
+        <stop offset="0%" stop-color="#C8956C" stop-opacity="0.18"/>
+        <stop offset="50%" stop-color="#8B1A2F" stop-opacity="0.1"/>
+        <stop offset="100%" stop-color="#0A0A0A" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="heroSilk1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#C8956C" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </linearGradient>
+      <linearGradient id="heroSilk2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.18"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="400" cy="300" rx="350" ry="280" fill="url(#heroGlow)">
+      <animate attributeName="rx" values="350;380;350" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="ry" values="280;310;280" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <path d="M0,600 C150,400 250,300 400,350 C550,400 650,300 800,200 L800,600Z" fill="url(#heroSilk1)">
+      <animateTransform attributeName="transform" type="translate" values="0,0;15,-10;0,0" dur="5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M0,500 C200,450 350,550 500,480 C650,410 750,480 800,450 L800,600 L0,600Z" fill="url(#heroSilk2)">
+      <animateTransform attributeName="transform" type="translate" values="0,0;-10,12;0,0" dur="4s" repeatCount="indefinite"/>
+    </path>
+  `;
+  document.getElementById('stage').insertBefore(svg, document.getElementById('particles'));
+}
+
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+function initCommercial() {
+  if (sceneTimeout) clearTimeout(sceneTimeout);
+  if (mistInterval) clearInterval(mistInterval);
+  const heroBg = document.getElementById('hero-bg-svg');
+  if (heroBg) heroBg.remove();
+  // Remove droplets
+  document.querySelectorAll('.droplet').forEach(d => d.remove());
+
+  scenes.bottleSvg.style.animation = '';
+  scene1();
+}
+
+initCommercial();
+</script>
+</body>
+</html>

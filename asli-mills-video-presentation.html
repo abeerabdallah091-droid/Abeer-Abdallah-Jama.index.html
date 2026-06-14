@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asli Mills — Automated Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    :root {
+      --green-900: #0D2B1A;
+      --green-800: #1B4332;
+      --green-700: #2D6A4F;
+      --green-400: #52B788;
+      --green-100: #D8F3DC;
+      --green-50:  #F0FAF3;
+      --gold:      #C9963A;
+      --gold-light:#FDF3E3;
+      --white:     #FFFFFF;
+      --off-white: #FAFAF8;
+      --gray-50:   #F6F5F3;
+      --gray-100:  #EBEBEA;
+      --gray-400:  #9C9C9A;
+      --gray-600:  #5C5C5A;
+      --gray-900:  #1A1A18;
+      --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --slide-dur: 8000;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #000;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    /* ── SLIDE WRAPPER ─────────────────────────── */
+    #stage {
+      position: fixed; inset: 0;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      padding: 72px 60px 100px;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.024);
+      filter: blur(5px);
+      transition: opacity 680ms var(--ease-out), transform 680ms var(--ease-out), filter 680ms var(--ease-out);
+      will-change: opacity, transform, filter;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+    .slide.exit {
+      opacity: 0;
+      transform: scale(0.982);
+      filter: blur(8px);
+      transition: opacity 460ms var(--ease-in-out), transform 460ms var(--ease-in-out), filter 460ms var(--ease-in-out);
+    }
+
+    /* ── ANIMATED CONTENT BASE ─────────────────── */
+    .anim-el {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 560ms var(--ease-out), transform 560ms var(--ease-out);
+    }
+    .slide.active .anim-el { opacity: 1; transform: translateY(0); }
+    .slide.active .anim-el:nth-child(1)  { transition-delay: 140ms; }
+    .slide.active .anim-el:nth-child(2)  { transition-delay: 215ms; }
+    .slide.active .anim-el:nth-child(3)  { transition-delay: 290ms; }
+    .slide.active .anim-el:nth-child(4)  { transition-delay: 365ms; }
+    .slide.active .anim-el:nth-child(5)  { transition-delay: 440ms; }
+
+    /* cards stagger */
+    .stagger-item {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 440ms var(--ease-out), transform 440ms var(--ease-out);
+    }
+    .slide.active .stagger-item { opacity: 1; transform: translateY(0); }
+    .slide.active .stagger-item:nth-child(1) { transition-delay: 340ms; }
+    .slide.active .stagger-item:nth-child(2) { transition-delay: 395ms; }
+    .slide.active .stagger-item:nth-child(3) { transition-delay: 450ms; }
+    .slide.active .stagger-item:nth-child(4) { transition-delay: 505ms; }
+    .slide.active .stagger-item:nth-child(5) { transition-delay: 560ms; }
+    .slide.active .stagger-item:nth-child(6) { transition-delay: 615ms; }
+
+    /* ── VIDEO CONTROLS ────────────────────────── */
+    #controls {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
+      padding: 12px 28px 18px;
+      background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.12) 70%, transparent 100%);
+      -webkit-backdrop-filter: blur(0px);
+      backdrop-filter: blur(0px);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    #timeline {
+      width: 100%; height: 3px; border-radius: 3px;
+      background: rgba(255,255,255,.18); cursor: pointer; position: relative;
+      overflow: visible;
+    }
+    #timeline-fill {
+      height: 100%; border-radius: 3px;
+      background: linear-gradient(to right, var(--green-400), var(--gold));
+      width: 0%; transition: width 100ms linear;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(201,150,58,.55), 0 0 2px rgba(82,183,136,.4);
+    }
+    #timeline-segment-fill {
+      position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px;
+      background: rgba(255,255,255,.45);
+      width: 0%;
+      transition: width 80ms linear;
+      pointer-events: none;
+    }
+    #timeline-scrubber {
+      position: absolute; top: 50%; right: -6px; transform: translateY(-50%) scale(0);
+      width: 12px; height: 12px; border-radius: 50%; background: #fff;
+      transition: transform 160ms var(--ease-out);
+      pointer-events: none;
+    }
+    #timeline:hover #timeline-scrubber { transform: translateY(-50%) scale(1); }
+
+    #ctrl-row {
+      display: flex; align-items: center; gap: 18px;
+    }
+    .ctrl-btn {
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,.85); font-size: 20px; line-height: 1;
+      padding: 6px; border-radius: 6px;
+      transition: color 140ms, transform 120ms var(--ease-out), background 140ms;
+      display: flex; align-items: center;
+    }
+    .ctrl-btn:hover { color: #fff; background: rgba(255,255,255,.1); }
+    .ctrl-btn:active { transform: scale(0.9); }
+    #btn-play svg { width: 20px; height: 20px; fill: currentColor; }
+    #slide-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+      color: rgba(255,255,255,.5);
+      margin-left: auto;
+    }
+    #slide-title-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+      color: rgba(255,255,255,.35); max-width: 200px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* segment markers */
+    #segment-markers { position: absolute; top: 0; left: 0; right: 0; height: 100%; pointer-events: none; }
+    .seg-mark {
+      position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(0,0,0,.5); border-radius: 1px;
+    }
+
+    /* ── SLIDE COUNTER DOTS ─────────────────────── */
+    #dot-row { display: flex; gap: 5px; align-items: center; }
+    .sdot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      transition: background 200ms var(--ease-out), transform 200ms var(--ease-out), width 200ms var(--ease-out);
+      cursor: pointer;
+    }
+    .sdot.active { background: var(--gold); transform: scale(1.4); }
+
+    /* ── SHARED TYPOGRAPHIC STYLES ─────────────── */
+    .eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .eyebrow span { display: block; width: 22px; height: 2px; background: var(--gold); border-radius: 2px; }
+    .eyebrow.light { color: rgba(255,255,255,.5); }
+    .eyebrow.light span { background: rgba(255,255,255,.3); }
+    .eyebrow.center { justify-content: center; }
+
+    .h1-cover {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(44px, 5.5vw, 84px); font-weight: 900;
+      line-height: 1.05; letter-spacing: -2.5px; color: #fff;
+      margin-bottom: 24px;
+    }
+    .h1-cover em { font-style: italic; color: var(--gold); }
+
+    .h2-light {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(30px, 3.6vw, 56px); font-weight: 900;
+      line-height: 1.08; letter-spacing: -1px; color: #fff;
+      margin-bottom: 10px;
+    }
+    .h2-dark {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(30px, 3.6vw, 56px); font-weight: 900;
+      line-height: 1.08; letter-spacing: -1px; color: var(--gray-900);
+      margin-bottom: 10px;
+    }
+    .sub-light { font-size: 16px; color: rgba(255,255,255,.6); line-height: 1.75; max-width: 540px; }
+    .sub-dark { font-size: 16px; color: var(--gray-600); line-height: 1.75; max-width: 540px; }
+
+    /* ── BLOBS ────────────────────────────────── */
+    .blobs { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+    .blob-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(45,106,79,.65), transparent 65%); top: -200px; left: -100px; animation: b1 18s ease-in-out infinite alternate; }
+    .blob-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,150,58,.28), transparent 65%); bottom: -150px; right: -80px; animation: b2 22s ease-in-out infinite alternate; animation-delay: -9s; }
+    .blob-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(82,183,136,.32), transparent 65%); top: 40%; left: 40%; animation: b3 27s ease-in-out infinite alternate; animation-delay: -16s; }
+    @keyframes b1 { to { translate: 50px 40px; } }
+    @keyframes b2 { to { translate: -40px -30px; } }
+    @keyframes b3 { to { translate: 30px 50px; } }
+    @media (prefers-reduced-motion: reduce) { .blob, .stagger-item, .anim-el { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; } }
+
+    /* ── SLIDE 1 — COVER ─────────────────────── */
+    .s-cover { background: #08110a; text-align: center; }
+    .cover-inner { position: relative; z-index: 2; max-width: 820px; }
+    .cover-sub {
+      font-size: 19px; color: rgba(255,255,255,.6); line-height: 1.72;
+      max-width: 560px; margin: 0 auto 36px;
+    }
+    .cover-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green-800); color: #fff;
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700;
+      padding: 16px 34px; border-radius: 999px;
+      box-shadow: 0 4px 24px rgba(27,67,50,.5);
+      transition: transform 160ms var(--ease-out), background 160ms, box-shadow 160ms;
+    }
+    .cover-cta:hover { background: var(--green-700); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(27,67,50,.6); }
+    .cover-cta:active { transform: scale(0.97); }
+    .cover-by {
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,.28); margin-top: 52px;
+    }
+
+    /* ── SLIDE 2 — PROBLEM ───────────────────── */
+    .s-problem { background: var(--off-white); }
+    .prob-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; max-width: 1100px; width: 100%; }
+    .prob-cards { display: flex; flex-direction: column; gap: 12px; }
+    .prob-card {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--green-800); border: 1.5px solid var(--green-700);
+      border-radius: 12px; padding: 16px 18px;
+      box-shadow: 0 4px 16px rgba(27,67,50,.2);
+    }
+    .prob-icon { font-size: 20px; flex-shrink: 0; width: 36px; text-align: center; }
+    .prob-text strong { display: block; font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 1px; }
+    .prob-text span { font-size: 11.5px; color: rgba(255,255,255,.55); }
+    .prob-x { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; background: rgba(239,68,68,.22); color: #fca5a5; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(239,68,68,.25); }
+
+    /* ── SLIDE 3 — FEATURES ──────────────────── */
+    .s-features { background: var(--green-900); }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1100px; width: 100%; margin-top: 40px; }
+    .feat-card {
+      background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px; padding: 28px 24px;
+      transition: background 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 200ms var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .feat-card:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.2); transform: translateY(-3px); }
+    }
+    .feat-card:active { transform: scale(0.97); }
+    .feat-icon { font-size: 32px; margin-bottom: 14px; }
+    .feat-title { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .feat-body { font-size: 13px; color: rgba(255,255,255,.58); line-height: 1.72; }
+    .feat-tag {
+      display: inline-block; margin-top: 14px;
+      font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gold); background: rgba(201,150,58,.12); border: 1px solid rgba(201,150,58,.22);
+      padding: 4px 10px; border-radius: 999px;
+    }
+
+    /* ── SLIDE 4 — WHATSAPP ──────────────────── */
+    .s-whatsapp { background: var(--white); }
+    .wa-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; max-width: 1100px; width: 100%; }
+    .wa-phone {
+      border-radius: 38px; background: #111b21;
+      box-shadow: 0 24px 64px rgba(0,0,0,.22), 0 8px 20px rgba(0,0,0,.1);
+      border: 6px solid #0a1014; overflow: hidden; max-width: 280px; width: 100%;
+    }
+    .wa-statusbar { background: #111b21; height: 22px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; color: rgba(255,255,255,.7); }
+    .wa-header { background: #1f2c34; padding: 9px 12px; display: flex; align-items: center; gap: 9px; }
+    .wa-back { color: #25D366; font-size: 18px; }
+    .wa-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #2D6A4F, #1B4332); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .wa-contact-name { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #fff; }
+    .wa-contact-status { font-size: 9px; color: #25D366; margin-top: 1px; }
+    .wa-header-icons { margin-left: auto; color: #aebac1; font-size: 14px; }
+    .wa-body { background: #0b141a; padding: 8px 8px 5px; display: flex; flex-direction: column; gap: 4px; min-height: 300px; }
+    .wa-date-chip { align-self: center; background: rgba(17,27,33,.85); color: #8696a0; font-size: 9px; padding: 2px 8px; border-radius: 5px; margin-bottom: 3px; }
+    .wa-msg { max-width: 80%; padding: 6px 10px 4px; border-radius: 7px; font-size: 11.5px; line-height: 1.45; color: #e9edef; position: relative; opacity: 0; transform: translateY(4px); transition: opacity 240ms var(--ease-out), transform 240ms var(--ease-out); }
+    .wa-msg.show { opacity: 1; transform: translateY(0); }
+    .wa-msg.in { background: #1f2c34; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .wa-msg.out { background: #005c4b; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .wa-sender { font-size: 9.5px; font-weight: 700; color: #25D366; margin-bottom: 2px; }
+    .wa-meta { display: flex; justify-content: flex-end; align-items: center; gap: 3px; margin-top: 2px; }
+    .wa-time { font-size: 9px; color: #8696a0; }
+    .wa-ticks { font-size: 9.5px; color: #53bdeb; }
+    .wa-typing { background: #1f2c34; align-self: flex-start; border-radius: 7px; border-bottom-left-radius: 2px; padding: 9px 12px; display: flex; gap: 4px; align-items: center; opacity: 0; transition: opacity 280ms var(--ease-out); }
+    .wa-typing.show { opacity: 1; }
+    .wa-typing span { width: 5px; height: 5px; border-radius: 50%; background: #8696a0; animation: tdot 1.2s ease-in-out infinite; }
+    .wa-typing span:nth-child(2) { animation-delay: .2s; }
+    .wa-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes tdot { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
+    .wa-input-bar { background: #1f2c34; padding: 7px 9px; display: flex; align-items: center; gap: 7px; }
+    .wa-input-field { flex: 1; background: #2a3942; border-radius: 18px; padding: 7px 12px; font-size: 10.5px; color: rgba(255,255,255,.5); }
+    .wa-send-btn { width: 30px; height: 30px; border-radius: 50%; background: #25D366; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; }
+    .wa-benefit { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--green-50); border-radius: 10px; border: 1px solid var(--green-100); }
+    .wa-benefit strong { font-size: 13px; color: var(--gray-900); display: block; margin-bottom: 1px; }
+    .wa-benefit span { font-size: 11.5px; color: var(--gray-600); }
+
+    /* ── SLIDE 5 — NUMBERS ───────────────────── */
+    .s-numbers { background: var(--green-800); }
+    .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1000px; width: 100%; margin-top: 40px; }
+    .num-card { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); border-radius: 20px; padding: 28px 22px; transition: background 200ms var(--ease-out), transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+    @media (hover: hover) and (pointer: fine) { .num-card:hover { background: rgba(255,255,255,.13); transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,.22); } }
+    .num-card:active { transform: scale(0.97); }
+    .num-big { font-family: 'Playfair Display', Georgia, serif; font-size: 52px; font-weight: 900; color: var(--gold); letter-spacing: -2px; line-height: 1; margin-bottom: 6px; }
+    .num-label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 8px; }
+    .num-body { font-size: 12.5px; color: rgba(255,255,255,.48); line-height: 1.68; }
+
+    /* ── SLIDE 6 — MOBILE ────────────────────── */
+    .s-mobile { background: var(--off-white); }
+    .mob-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; max-width: 1100px; width: 100%; }
+    .mob-mockup { background: var(--gray-900); border-radius: 36px; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.18), 0 8px 20px rgba(0,0,0,.08); border: 6px solid var(--gray-900); max-width: 260px; margin: 0 auto; }
+    .mob-bar { height: 26px; background: #111; display: flex; align-items: center; justify-content: center; }
+    .mob-bar span { width: 52px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.15); }
+    .mob-browser-bar { background: #1c1c1e; padding: 5px 9px; display: flex; align-items: center; gap: 5px; }
+    .mob-browser-dots { display: flex; gap: 3px; }
+    .mob-browser-dots span { width: 5.5px; height: 5.5px; border-radius: 50%; }
+    .mob-browser-dots span:nth-child(1) { background: #ff5f57; }
+    .mob-browser-dots span:nth-child(2) { background: #febc2e; }
+    .mob-browser-dots span:nth-child(3) { background: #28c840; }
+    .mob-url-bar { flex: 1; background: #2c2c2e; border-radius: 5px; padding: 3px 7px; display: flex; align-items: center; gap: 4px; }
+    .mob-url-lock { font-size: 7.5px; color: #8e8e93; }
+    .mob-url-text { font-family: 'Montserrat', sans-serif; font-size: 8.5px; font-weight: 600; color: #e5e5ea; }
+    .mob-url-text em { font-style: normal; color: #30d158; }
+    .mob-iframe-wrap { width: 248px; height: 440px; overflow: hidden; position: relative; }
+    .mob-iframe { width: 375px; height: 812px; border: none; display: block; transform: scale(0.661); transform-origin: top left; pointer-events: none; }
+    .mob-bullet { display: flex; align-items: center; gap: 10px; }
+    .mob-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .mob-bullet span { font-size: 13.5px; color: var(--gray-700); }
+
+    /* ── SLIDE 7 — COMPARISON ────────────────── */
+    .s-compare { background: var(--white); }
+    .cmp-table { width: 100%; max-width: 860px; border-collapse: collapse; }
+    .cmp-table th, .cmp-table td { padding: 14px 18px; text-align: left; }
+    .cmp-table thead th { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); border-bottom: 2px solid var(--gray-100); }
+    .cmp-table thead th.col-new { color: var(--green-700); }
+    .cmp-table tbody tr { border-bottom: 1px solid var(--gray-100); }
+    .cmp-table td:first-child { font-size: 13px; font-weight: 600; color: var(--gray-900); }
+    .cmp-table td.col-old { font-size: 12.5px; color: #ef4444; }
+    .cmp-table td.col-new { font-size: 12.5px; color: var(--green-700); font-weight: 600; }
+    .check::before { content: '✓ '; color: var(--green-700); font-weight: 800; }
+    .cross::before { content: '✗ '; color: #ef4444; font-weight: 800; }
+
+    /* ── SLIDE 8 — CTA (Emil-quality) ─────────── */
+    .s-cta { background: #05120a; text-align: center; overflow: hidden; }
+
+    /* Radial spotlight */
+    .cta-spotlight {
+      position: absolute; width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,106,79,.18) 0%, transparent 65%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      z-index: 1; pointer-events: none;
+    }
+
+    /* Giant ghost letterform behind everything */
+    .cta-bg-word {
+      position: absolute; z-index: 1; pointer-events: none;
+      font-family: 'Playfair Display', serif; font-weight: 900;
+      font-size: 40vw; color: transparent;
+      -webkit-text-stroke: 1px rgba(82,183,136,.04);
+      letter-spacing: -4vw; white-space: nowrap;
+      top: 50%; left: 50%; transform: translate(-50%,-52%);
+      -webkit-user-select: none; user-select: none; line-height: 1;
+    }
+
+    .cta-inner { position: relative; z-index: 2; max-width: 680px; }
+
+    /* Gold rule lines — draw left-to-right with clip-path */
+    .cta-rule {
+      width: 44px; height: 2px; background: var(--gold);
+      margin: 0 auto 18px; border-radius: 2px;
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 650ms var(--ease-out);
+    }
+    .slide.active .cta-rule          { clip-path: inset(0 0% 0 0); transition-delay: 120ms; }
+    .slide.active .cta-rule.rule-bot { clip-path: inset(0 0% 0 0); transition-delay: 300ms; }
+    .cta-rule.rule-bot { margin-top: 16px; margin-bottom: 0; }
+
+    /* Eyebrow */
+    .cta-eyebrow-txt {
+      font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+    }
+    .slide.active .cta-eyebrow-txt { opacity: 1; transform: translateY(0); transition-delay: 220ms; }
+
+    /* Heading — each line slides up from behind its overflow:hidden parent */
+    .cta-headline { margin: 26px 0 22px; }
+    .cta-line-wrap { display: block; overflow: hidden; }
+    .cta-line-inner {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 5vw, 76px); font-weight: 900;
+      color: #fff; line-height: 1.07; letter-spacing: -2.5px;
+      transform: translateY(108%);
+      transition: transform 720ms var(--ease-out);
+    }
+    .cta-line-inner em { font-style: italic; color: var(--gold); }
+    .slide.active .cta-line-wrap:nth-child(1) .cta-line-inner { transform: translateY(0); transition-delay: 360ms; }
+    .slide.active .cta-line-wrap:nth-child(2) .cta-line-inner { transform: translateY(0); transition-delay: 500ms; }
+
+    /* Subtitle */
+    .cta-sub-txt {
+      font-size: 16px; color: rgba(255,255,255,.52); line-height: 1.8;
+      max-width: 510px; margin: 0 auto 28px;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 520ms var(--ease-out), transform 520ms var(--ease-out);
+    }
+    .slide.active .cta-sub-txt { opacity: 1; transform: translateY(0); transition-delay: 620ms; }
+
+    /* Feature pills — spring entrance */
+    .cta-pills { display: flex; gap: 9px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+    .cta-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px; padding: 8px 15px;
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,.65); letter-spacing: .04em;
+      opacity: 0; transform: scale(0.86) translateY(10px);
+      transition: opacity 380ms var(--ease-out), transform 380ms var(--ease-spring),
+                  background 180ms, border-color 180ms;
+    }
+    .cta-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green-400); flex-shrink: 0; }
+    .slide.active .cta-pill { opacity: 1; transform: scale(1) translateY(0); }
+    .slide.active .cta-pill:nth-child(1) { transition-delay: 680ms; }
+    .slide.active .cta-pill:nth-child(2) { transition-delay: 750ms; }
+    .slide.active .cta-pill:nth-child(3) { transition-delay: 820ms; }
+    @media (hover:hover) and (pointer:fine) {
+      .cta-pill:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); }
+    }
+
+    /* Buttons */
+    .cta-btns {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      opacity: 0; transform: translateY(14px);
+      transition: opacity 480ms var(--ease-out), transform 480ms var(--ease-out);
+    }
+    .slide.active .cta-btns { opacity: 1; transform: translateY(0); transition-delay: 860ms; }
+
+    /* Gold CTA button — glow via opacity on ::after (GPU-only, no box-shadow in keyframe) */
+    @keyframes gold-glow {
+      0%, 100% { opacity: 0; }
+      55%       { opacity: 0.55; }
+    }
+    .btn-gold-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--gold); color: #071a0d;
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800;
+      padding: 18px 36px; border-radius: 999px; letter-spacing: .02em;
+      box-shadow: 0 4px 24px rgba(201,150,58,.45);
+      transition: transform 160ms var(--ease-out), filter 160ms;
+      position: relative;
+    }
+    .btn-gold-cta::after {
+      content: ''; position: absolute; inset: -3px; border-radius: 999px;
+      background: var(--gold); filter: blur(20px);
+      opacity: 0; z-index: -1;
+      animation: gold-glow 2.6s var(--ease-in-out) infinite 1400ms;
+    }
+    @media (hover:hover) and (pointer:fine) {
+      .btn-gold-cta:hover { transform: translateY(-3px); filter: brightness(1.1); }
+    }
+    .btn-gold-cta:active { transform: scale(0.97); filter: blur(0.8px) brightness(.95); }
+
+    /* Ghost CTA button */
+    .btn-ghost-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; color: rgba(255,255,255,.65);
+      font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;
+      padding: 18px 32px; border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,.16);
+      transition: transform 160ms var(--ease-out), background 200ms, border-color 200ms, color 200ms;
+    }
+    @media (hover:hover) and (pointer:fine) {
+      .btn-ghost-cta:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.3); color: #fff; }
+    }
+    .btn-ghost-cta:active { transform: scale(0.97); }
+
+    /* Credit */
+    .cta-credit-txt {
+      font-size: 10px; color: rgba(255,255,255,.18); margin-top: 42px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 600ms var(--ease-out);
+    }
+    .slide.active .cta-credit-txt { opacity: 1; transition-delay: 1100ms; }
+
+    /* Keep old names for safety — point to new names */
+    .btn-gold { display: inline-flex; align-items: center; gap: 10px; background: var(--gold); color: var(--gray-900); font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; padding: 17px 34px; border-radius: 999px; box-shadow: 0 4px 24px rgba(201,150,58,.45); transition: transform 160ms var(--ease-out), box-shadow 160ms, filter 160ms; }
+    .btn-gold:active { transform: scale(0.97); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 10px; background: transparent; color: rgba(255,255,255,.75); font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; padding: 17px 30px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,.2); transition: transform 160ms var(--ease-out), background 160ms, border-color 160ms; }
+    .btn-ghost:active { transform: scale(0.97); }
+    .cta-credit { font-size: 11px; color: rgba(255,255,255,.22); margin-top: 48px; letter-spacing: 0.06em; }
+
+    /* ── SLIDE 7 — PHONE MOCKUPS (Emil redesign) ─── */
+    .s-mockups {
+      background: radial-gradient(ellipse 140% 90% at 50% 108%, rgba(27,67,50,.68) 0%, #070e0a 50%, #040c07 100%);
+      overflow: hidden;
+    }
+
+    /* Stage bg — blobs + ground glow */
+    .mkp-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .mkp-blob { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
+    .mkp-blob-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(45,106,79,.28), transparent 65%); top: -200px; left: -100px; animation: b1 22s ease-in-out infinite alternate; }
+    .mkp-blob-2 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(201,150,58,.11), transparent 65%); bottom: -100px; right: -70px; animation: b2 26s ease-in-out infinite alternate; }
+    .mkp-blob-3 { width: 360px; height: 360px; background: radial-gradient(circle, rgba(82,183,136,.12), transparent 65%); top: 30%; left: 40%; animation: b3 30s ease-in-out infinite alternate; }
+    .mkp-ground-glow { position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); width: 820px; height: 240px; border-radius: 50%; background: radial-gradient(ellipse, rgba(45,106,79,.18), transparent 68%); filter: blur(28px); }
+
+    /* Catchy header */
+    .mkp-header { position: relative; z-index: 2; text-align: center; flex-shrink: 0; margin-bottom: 16px; }
+    .mkp-headline { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 48px); font-weight: 900; line-height: 1.08; letter-spacing: -1.5px; color: #fff; }
+    .mkp-headline em { font-style: italic; color: var(--gold); }
+    .mkp-eyebrow { margin-bottom: 10px; opacity: 0; transform: translateY(12px); transition: opacity 480ms var(--ease-out) 140ms, transform 480ms var(--ease-out) 140ms; }
+    .slide.active .mkp-eyebrow { opacity: 1; transform: translateY(0); }
+
+    /* Header line reveal — curtain from bottom */
+    .mkp-line-wrap { display: block; overflow: hidden; }
+    .mkp-line-inner { display: block; transform: translateY(110%); transition: transform 680ms var(--ease-out); }
+    .slide.active .mkp-line-wrap:nth-child(1) .mkp-line-inner { transform: translateY(0); transition-delay: 280ms; }
+    .slide.active .mkp-line-wrap:nth-child(2) .mkp-line-inner { transform: translateY(0); transition-delay: 420ms; }
+
+    /* Phone stage */
+    .mockup-stage { position: relative; width: 680px; height: 460px; margin: 0 auto; flex-shrink: 0; z-index: 2; }
+
+    /* Entrance — dramatic spring + scale-in */
+    .clay-wrap {
+      position: absolute; bottom: 0; opacity: 0;
+      will-change: transform, opacity;
+      transition: transform 820ms var(--ease-spring), opacity 680ms var(--ease-out);
+    }
+    .clay-wrap.phone-left   { left: 10px;  transform-origin: bottom center; transform: translateX(60px)  rotate(24deg)  translateY(130px) scale(0.88); z-index: 2; }
+    .clay-wrap.phone-center { left: 50%;                                    transform: translateX(-50%)                 translateY(90px)  scale(0.90); z-index: 3; }
+    .clay-wrap.phone-right  { right: 10px; transform-origin: bottom center; transform: translateX(-60px) rotate(-18deg) translateY(130px) scale(0.88); z-index: 1; }
+
+    .slide.active .clay-wrap { opacity: 1; }
+    .slide.active .clay-wrap.phone-left   { transform: translateX(60px)  rotate(16deg)  translateY(28px) scale(1); transition-delay: 280ms; }
+    .slide.active .clay-wrap.phone-center { transform: translateX(-50%)               translateY(0)    scale(1); transition-delay: 80ms;  }
+    .slide.active .clay-wrap.phone-right  { transform: translateX(-60px) rotate(-10deg) translateY(28px) scale(1); transition-delay: 460ms; }
+
+    /* Gentle float — JS adds .floating after entrance settles */
+    @keyframes phone-float-c { 0%,100%{transform:translateX(-50%) translateY(0) scale(1)}  50%{transform:translateX(-50%) translateY(-9px) scale(1)} }
+    @keyframes phone-float-l { 0%,100%{transform:translateX(60px)  rotate(16deg) translateY(28px) scale(1)} 50%{transform:translateX(60px)  rotate(15deg) translateY(19px) scale(1)} }
+    @keyframes phone-float-r { 0%,100%{transform:translateX(-60px) rotate(-10deg) translateY(28px) scale(1)} 50%{transform:translateX(-60px) rotate(-9deg) translateY(19px) scale(1)} }
+    .clay-wrap.floating.phone-center { animation: phone-float-c 5s   ease-in-out infinite; }
+    .clay-wrap.floating.phone-left   { animation: phone-float-l 6.4s ease-in-out infinite; }
+    .clay-wrap.floating.phone-right  { animation: phone-float-r 5.7s ease-in-out infinite; }
+
+    /* Phone body — richer shadow for dark stage */
+    .clay-phone {
+      background: #fff; border-radius: 38px;
+      border: 8px solid rgba(255,255,255,.88);
+      box-shadow: 0 44px 88px rgba(0,0,0,.60), 0 14px 32px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.9);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .clay-phone.sz-lg { width: 222px; height: 454px; }
+    .clay-phone.sz-sm { width: 196px; height: 402px; }
+
+    .clay-notch { height: 20px; background: #efefef; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .clay-notch span { width: 50px; height: 4px; border-radius: 3px; background: #d4d4d4; }
+
+    /* Screen — shimmer sweep on arrival */
+    .phone-frame { flex: 1; overflow: hidden; position: relative; }
+    .phone-frame::after {
+      content: ''; position: absolute; inset: 0; z-index: 10; pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 25%, rgba(255,255,255,.13) 50%, rgba(255,255,255,0) 75%);
+      transform: translateX(-150%);
+    }
+    .slide.active .clay-wrap.phone-center .phone-frame::after { transform: translateX(150%); transition: transform 900ms cubic-bezier(0.4,0,0.6,1) 820ms; }
+    .slide.active .clay-wrap.phone-left   .phone-frame::after { transform: translateX(150%); transition: transform 900ms cubic-bezier(0.4,0,0.6,1) 1060ms; }
+    .slide.active .clay-wrap.phone-right  .phone-frame::after { transform: translateX(150%); transition: transform 900ms cubic-bezier(0.4,0,0.6,1) 1240ms; }
+
+    .phone-iframe { border: none; display: block; pointer-events: none; width: 375px; height: 900px; transform-origin: top left; }
+    .phone-iframe.lg { transform: scale(0.5387); }
+    .phone-iframe.sm { transform: scale(0.48); }
+
+    /* Captions — fade up after phones settle */
+    .mockup-caption {
+      text-align: center; margin-top: 8px;
+      font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,.42);
+      opacity: 0; transform: translateY(6px);
+      transition: opacity 360ms var(--ease-out), transform 360ms var(--ease-out);
+    }
+    .slide.active .clay-wrap.phone-center .mockup-caption { opacity: 1; transform: translateY(0); transition-delay: 1060ms; }
+    .slide.active .clay-wrap.phone-left   .mockup-caption { opacity: 1; transform: translateY(0); transition-delay: 1280ms; }
+    .slide.active .clay-wrap.phone-right  .mockup-caption { opacity: 1; transform: translateY(0); transition-delay: 1480ms; }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 900px) {
+      .slide { padding: 52px 28px 90px; }
+      .prob-layout, .wa-layout, .mob-layout { grid-template-columns: 1fr; gap: 28px; }
+      .feat-grid, .num-grid { grid-template-columns: repeat(2, 1fr); }
+      .wa-phone, .mob-mockup { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .feat-grid, .num-grid { grid-template-columns: 1fr; }
+      .cta-actions { flex-direction: column; }
+      .btn-gold, .btn-ghost { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- SLIDE 0 — COVER -->
+  <section class="slide s-cover" data-title="Asli Mills — Presentation">
+    <div class="blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="cover-inner">
+      <div class="eyebrow anim-el center"><span></span> Asli Mills — Sales Presentation <span></span></div>
+      <h1 class="h1-cover anim-el">A Website That<br><em>Sells for You,</em><br>While You Sleep</h1>
+      <p class="cover-sub anim-el">Your new website works all day, every day — showing your products, building customer trust, and bringing in orders.</p>
+      <p class="cover-by anim-el">
+        Designed by &nbsp;<svg width="86" height="20" viewBox="0 0 86 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin:0 4px -2px;"><rect width="86" height="20" rx="10" fill="#2563EB"/><circle cx="11" cy="10" r="6.5" fill="white"/><circle cx="11" cy="10" r="3.5" fill="#2563EB"/><text x="21" y="14.5" font-family="Montserrat,sans-serif" font-size="10" font-weight="700" fill="white">horumar</text></svg>&nbsp; Horumar Solution · 2026
+      </p>
+    </div>
+  </section>
+
+  <!-- SLIDE 1 — PROBLEM -->
+  <section class="slide s-problem" data-title="The Problem">
+    <div class="prob-layout">
+      <div>
+        <div class="eyebrow anim-el">The Problem</div>
+        <h2 class="h2-dark anim-el">Old Websites Are<br>Costing You Sales</h2>
+        <p class="sub-dark anim-el" style="margin-top:14px;">Your products are top quality. But the old website wasn't showing that. Here's every problem — and how it's now fixed.</p>
+      </div>
+      <div class="prob-cards">
+        <div class="prob-card stagger-item">
+          <div class="prob-icon">📵</div>
+          <div class="prob-text"><strong>No WhatsApp Integration</strong><span>Customers had no way to contact you instantly</span></div>
+          <div class="prob-x">✗</div>
+        </div>
+        <div class="prob-card stagger-item">
+          <div class="prob-icon">📱</div>
+          <div class="prob-text"><strong>Not Mobile-Friendly</strong><span>90% of your customers shop on their phone</span></div>
+          <div class="prob-x">✗</div>
+        </div>
+        <div class="prob-card stagger-item">
+          <div class="prob-icon">🔍</div>
+          <div class="prob-text"><strong>Invisible to Search Engines</strong><span>No SEO — people searching couldn't find you</span></div>
+          <div class="prob-x">✗</div>
+        </div>
+        <div class="prob-card stagger-item">
+          <div class="prob-icon">😐</div>
+          <div class="prob-text"><strong>No Trust Signals</strong><span>No reviews, no stats — nothing to build confidence</span></div>
+          <div class="prob-x">✗</div>
+        </div>
+        <div class="prob-card stagger-item">
+          <div class="prob-icon">🎨</div>
+          <div class="prob-text"><strong>Didn't Match Your Brand Quality</strong><span>Amateur look clashed with your premium products</span></div>
+          <div class="prob-x">✗</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 — FEATURES -->
+  <section class="slide s-features" data-title="What's Different Now">
+    <div class="eyebrow light center anim-el">What's Different Now</div>
+    <h2 class="h2-light anim-el" style="text-align:center;">Built to Look Great<br>and Get You Orders</h2>
+    <div class="feat-grid">
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">✨</div>
+        <div class="feat-title">Premium Visual Identity</div>
+        <div class="feat-body">Beautiful design and fonts that make customers feel they are shopping from a trusted brand.</div>
+        <div class="feat-tag">Design Excellence</div>
+      </div>
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">WhatsApp-First Ordering</div>
+        <div class="feat-body">Every product card has a direct WhatsApp button. Customers order in seconds — no forms, no friction.</div>
+        <div class="feat-tag">Instant Conversion</div>
+      </div>
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">📱</div>
+        <div class="feat-title">Built for Mobile First</div>
+        <div class="feat-body">Menu, layout, and buttons all adjust perfectly for any screen size.</div>
+        <div class="feat-tag">Mobile Optimized</div>
+      </div>
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Full SEO Setup</div>
+        <div class="feat-body">Beautiful link previews when shared on WhatsApp, Instagram, or Facebook — automatically.</div>
+        <div class="feat-tag">Discoverability</div>
+      </div>
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">⭐</div>
+        <div class="feat-title">Built-In Trust System</div>
+        <div class="feat-body">Scrolling testimonials, customer stats, ratings, and a continuous trust badge bar.</div>
+        <div class="feat-tag">Credibility</div>
+      </div>
+      <div class="feat-card stagger-item">
+        <div class="feat-icon">🎬</div>
+        <div class="feat-title">Smooth Animations</div>
+        <div class="feat-body">Everything moves smoothly as customers scroll. Buttons react to taps — fast, modern, professional.</div>
+        <div class="feat-tag">Feel & Delight</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 — WHATSAPP -->
+  <section class="slide s-whatsapp" data-title="3-Second Ordering">
+    <div class="wa-layout">
+      <div>
+        <div class="eyebrow anim-el">Ordering Experience</div>
+        <h2 class="h2-dark anim-el">Your Customers Order<br>in 3 Seconds Flat</h2>
+        <p class="sub-dark anim-el" style="margin-top:14px;margin-bottom:22px;">No checkout forms. No account. They tap the WhatsApp button, the message is pre-filled, and they order instantly.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="wa-benefit stagger-item"><span style="font-size:18px;">🛒</span><div><strong>No Shopping Cart Needed</strong><span>Direct conversation = higher trust = more conversions</span></div></div>
+          <div class="wa-benefit stagger-item"><span style="font-size:18px;">⚡</span><div><strong>Pre-Filled Messages</strong><span>Customers don't type — product name is already in the message</span></div></div>
+          <div class="wa-benefit stagger-item"><span style="font-size:18px;">🌍</span><div><strong>Works Anywhere in the World</strong><span>WhatsApp has 2 billion users — your market is global</span></div></div>
+        </div>
+      </div>
+      <div class="wa-phone" id="waPhone">
+        <div class="wa-statusbar"><span>9:41</span><span>📶 🔋</span></div>
+        <div class="wa-header">
+          <div class="wa-back">‹</div>
+          <div class="wa-avatar">🌿</div>
+          <div style="flex:1;"><div class="wa-contact-name">Asli Mills</div><div class="wa-contact-status">online</div></div>
+          <div class="wa-header-icons">📞 ⋮</div>
+        </div>
+        <div class="wa-body" id="waChat">
+          <div class="wa-date-chip">Today</div>
+          <div class="wa-msg in" data-i="0"><div class="wa-sender">Faadumo Hassan</div>Salaam! Do you deliver to Hargeisa?<div class="wa-meta"><span class="wa-time">9:38</span></div></div>
+          <div class="wa-msg out" data-i="1">Wa alaykum salaam! Yes we deliver across Somaliland 😊 What would you like to order?<div class="wa-meta"><span class="wa-time">9:39</span><span class="wa-ticks">✓✓</span></div></div>
+          <div class="wa-msg in" data-i="2">I'd like the Qasil 80g and Eucalyptus Oil 30ml please!<div class="wa-meta"><span class="wa-time">9:40</span></div></div>
+          <div class="wa-msg out" data-i="3">Perfect choice! 🌱<br>• Qasil 80g<br>• Eucalyptus Oil 30ml<br><br>Can I get your delivery address?<div class="wa-meta"><span class="wa-time">9:41</span><span class="wa-ticks">✓✓</span></div></div>
+          <div class="wa-msg in" data-i="4">26 June area, near the central mosque. Name: Faadumo Hassan 🙏<div class="wa-meta"><span class="wa-time">9:42</span></div></div>
+          <div class="wa-msg out" data-i="5">Order confirmed ✅ We'll deliver Thursday. Thank you for choosing Asli Mills! 💚<div class="wa-meta"><span class="wa-time">9:42</span><span class="wa-ticks">✓✓</span></div></div>
+          <div class="wa-typing" id="waTyping"><span></span><span></span><span></span></div>
+        </div>
+        <div class="wa-input-bar"><div class="wa-input-field">Type a message…</div><button class="wa-send-btn">➤</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 — NUMBERS -->
+  <section class="slide s-numbers" data-title="The Numbers">
+    <div class="eyebrow light center anim-el">The Numbers</div>
+    <h2 class="h2-light anim-el" style="text-align:center;">Why This Matters<br>for Your Business</h2>
+    <div class="num-grid">
+      <div class="num-card stagger-item"><div class="num-big">90%</div><div class="num-label">Mobile Shoppers</div><div class="num-body">9 in 10 of your customers browse on mobile. This site is built mobile-first.</div></div>
+      <div class="num-card stagger-item"><div class="num-big">3s</div><div class="num-label">Time to Order</div><div class="num-body">From landing on the site to sending a WhatsApp order — three seconds flat.</div></div>
+      <div class="num-card stagger-item"><div class="num-big">2M+</div><div class="num-label">Somaliland WhatsApp Users</div><div class="num-body">Your customers are already on WhatsApp — ready to order from your business.</div></div>
+      <div class="num-card stagger-item"><div class="num-big">100%</div><div class="num-label">SEO Ready</div><div class="num-body">Share your link on any platform and it shows a beautiful branded preview automatically.</div></div>
+      <div class="num-card stagger-item"><div class="num-big">0s</div><div class="num-label">Load Time for Animations</div><div class="num-body">All animations load instantly and never slow down the website.</div></div>
+      <div class="num-card stagger-item"><div class="num-big">∞</div><div class="num-label">Works 24 / 7</div><div class="num-body">Your website takes orders while you sleep and builds your brand around the clock.</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 — MOBILE -->
+  <section class="slide s-mobile" data-title="Mobile Experience">
+    <div class="mob-layout">
+      <div class="mob-mockup anim-el">
+        <div class="mob-bar"><span></span></div>
+        <div class="mob-browser-bar">
+          <div class="mob-browser-dots"><span></span><span></span><span></span></div>
+          <div class="mob-url-bar"><span class="mob-url-lock">🔒</span><span class="mob-url-text"><em>horumar-solution</em>.github.io/asli-mills</span></div>
+        </div>
+        <div class="mob-iframe-wrap">
+          <iframe src="https://horumar-solution.github.io/asli-mills/" class="mob-iframe" title="Asli Mills live site preview" scrolling="no" loading="lazy"></iframe>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow anim-el">Mobile Experience</div>
+        <h2 class="h2-dark anim-el">Looks Perfect on<br>Every Screen</h2>
+        <p class="sub-dark anim-el" style="margin-top:14px;margin-bottom:26px;">From the smallest phone to the biggest screen — your website adjusts perfectly. Every button is easy to tap.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="mob-bullet stagger-item"><div class="mob-dot"></div><span>Animated hamburger menu with smooth ✕ transition</span></div>
+          <div class="mob-bullet stagger-item"><div class="mob-dot"></div><span>Touch-optimized product cards with tap feedback</span></div>
+          <div class="mob-bullet stagger-item"><div class="mob-dot"></div><span>Sticky menu stays visible as you scroll</span></div>
+          <div class="mob-bullet stagger-item"><div class="mob-dot"></div><span>Hover effects only on desktop — never triggered accidentally on phones</span></div>
+          <div class="mob-bullet stagger-item"><div class="mob-dot"></div><span>Even the browser tab color matches your brand</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 — COMPARISON -->
+  <section class="slide s-compare" data-title="Before vs. After">
+    <div style="width:100%;max-width:860px;">
+      <div class="eyebrow center anim-el">Side by Side</div>
+      <h2 class="h2-dark anim-el" style="text-align:center;">Old Asli Mills vs. Asli Mills</h2>
+      <table class="cmp-table anim-el" style="margin-top:32px;">
+        <thead>
+          <tr><th>Feature</th><th class="col-old">❌ Before</th><th class="col-new">✓ Now</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>WhatsApp Ordering</td><td class="col-old"><span class="cross">Not connected</span></td><td class="col-new"><span class="check">Every product card</span></td></tr>
+          <tr><td>Mobile Design</td><td class="col-old"><span class="cross">Broken on phones</span></td><td class="col-new"><span class="check">Mobile-first, perfect</span></td></tr>
+          <tr><td>SEO / Link Previews</td><td class="col-old"><span class="cross">No meta tags</span></td><td class="col-new"><span class="check">Looks great when shared</span></td></tr>
+          <tr><td>Customer Reviews</td><td class="col-old"><span class="cross">None visible</span></td><td class="col-new"><span class="check">Infinite scrolling marquee</span></td></tr>
+          <tr><td>Brand Typography</td><td class="col-old"><span class="cross">Default system fonts</span></td><td class="col-new"><span class="check">Premium brand fonts</span></td></tr>
+          <tr><td>Animations</td><td class="col-old"><span class="cross">Static, no movement</span></td><td class="col-new"><span class="check">Smooth animated scrolling</span></td></tr>
+          <tr><td>Trust Signals</td><td class="col-old"><span class="cross">Nothing to build trust</span></td><td class="col-new"><span class="check">Stats, reviews, trust bar</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 — PHONE MOCKUPS -->
+  <section class="slide s-mockups" id="slide-mockups" data-title="The Live Website">
+
+    <!-- Atmospheric background -->
+    <div class="mkp-bg">
+      <div class="mkp-blob mkp-blob-1"></div>
+      <div class="mkp-blob mkp-blob-2"></div>
+      <div class="mkp-blob mkp-blob-3"></div>
+      <div class="mkp-ground-glow"></div>
+    </div>
+
+    <!-- Catchy header — line-by-line curtain reveal -->
+    <div class="mkp-header">
+      <div class="eyebrow light center mkp-eyebrow">
+        <span></span> See It Live <span></span>
+      </div>
+      <h2 class="mkp-headline">
+        <span class="mkp-line-wrap"><span class="mkp-line-inner">Your Store,</span></span>
+        <span class="mkp-line-wrap"><span class="mkp-line-inner"><em>In Every Hand</em></span></span>
+      </h2>
+    </div>
+
+    <!-- Phone mockup stage -->
+    <div class="mockup-stage">
+
+      <!-- LEFT PHONE — Products -->
+      <div class="clay-wrap phone-left">
+        <div class="clay-phone sz-sm">
+          <div class="clay-notch"><span></span></div>
+          <div class="phone-frame">
+            <iframe class="phone-iframe sm"
+              src="https://horumar-solution.github.io/asli-mills/#products"
+              title="Asli Mills — Products"
+              loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+        <div class="mockup-caption">Products</div>
+      </div>
+
+      <!-- CENTER PHONE — Who We Are -->
+      <div class="clay-wrap phone-center">
+        <div class="clay-phone sz-lg">
+          <div class="clay-notch"><span></span></div>
+          <div class="phone-frame">
+            <iframe class="phone-iframe lg"
+              src="https://horumar-solution.github.io/asli-mills/#about"
+              title="Asli Mills — Who We Are"
+              loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+        <div class="mockup-caption">Who We Are</div>
+      </div>
+
+      <!-- RIGHT PHONE — Eucalyptus Oil Product Page -->
+      <div class="clay-wrap phone-right">
+        <div class="clay-phone sz-sm">
+          <div class="clay-notch"><span></span></div>
+          <div class="phone-frame">
+            <iframe class="phone-iframe sm"
+              src="./asli-mills-product-preview.html"
+              title="Eucalyptus Oil"
+              loading="lazy" scrolling="no"></iframe>
+          </div>
+        </div>
+        <div class="mockup-caption">Eucalyptus Oil</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SLIDE 8 — CTA -->
+  <section class="slide s-cta" data-title="Ready to Launch">
+    <!-- Animated blobs -->
+    <div class="blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <!-- Radial spotlight + ghost background word -->
+    <div class="cta-spotlight"></div>
+    <div class="cta-bg-word">ASLI</div>
+
+    <div class="cta-inner">
+
+      <!-- Rule + eyebrow + rule -->
+      <div class="cta-rule"></div>
+      <div class="cta-eyebrow-txt">Hargeisa's Most Trusted · Since 1998</div>
+      <div class="cta-rule rule-bot"></div>
+
+      <!-- Eye-catching headline — line-by-line curtain reveal -->
+      <h2 class="cta-headline">
+        <span class="cta-line-wrap">
+          <span class="cta-line-inner">Natural Products.</span>
+        </span>
+        <span class="cta-line-wrap">
+          <span class="cta-line-inner"><em>Premium Presence.</em></span>
+        </span>
+      </h2>
+
+      <!-- Subtitle -->
+      <p class="cta-sub-txt">Asli Mills has been crafting pure, natural skincare since 1998. Now every customer in Hargeisa — and beyond — can discover, trust, and order in seconds.</p>
+
+      <!-- Feature pills — spring entrance -->
+      <div class="cta-pills">
+        <div class="cta-pill"><div class="cta-pill-dot"></div>100% Organic Always</div>
+        <div class="cta-pill"><div class="cta-pill-dot"></div>WhatsApp Ordering</div>
+        <div class="cta-pill"><div class="cta-pill-dot"></div>Mobile-First Design</div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="cta-btns">
+        <a href="https://horumar-solution.github.io/asli-mills/" class="btn-gold-cta" target="_blank" rel="noopener">View the Live Site →</a>
+        <a href="https://horumar-solution.github.io/Abeer-Abdallah-Jama.index.html" target="_blank" rel="noopener" class="btn-ghost-cta">Horumar Portfolio →</a>
+      </div>
+
+      <!-- Credit -->
+      <p class="cta-credit-txt">Designed by Horumar Solution · abeerabdallah091@gmail.com · 2026</p>
+
+    </div>
+  </section>
+
+</div><!-- /stage -->
+
+<!-- VIDEO CONTROLS -->
+<div id="controls">
+  <div id="timeline" id="tl">
+    <div id="segment-markers"></div>
+    <div id="timeline-fill"></div>
+    <div id="timeline-segment-fill"></div>
+    <div id="timeline-scrubber"></div>
+  </div>
+  <div id="ctrl-row">
+    <button class="ctrl-btn" id="btn-prev" title="Previous (←)" aria-label="Previous slide">
+      <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/></svg>
+    </button>
+    <button class="ctrl-btn" id="btn-play" title="Play/Pause (Space)" aria-label="Play or pause">
+      <svg id="icon-play" viewBox="0 0 20 20"><path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+      <svg id="icon-pause" viewBox="0 0 20 20" style="display:none;"><rect x="5" y="3" width="3.5" height="14" rx="1.5"/><rect x="11.5" y="3" width="3.5" height="14" rx="1.5"/></svg>
+    </button>
+    <button class="ctrl-btn" id="btn-next" title="Next (→)" aria-label="Next slide">
+      <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor"><path d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/></svg>
+    </button>
+    <div id="dot-row"></div>
+    <div id="slide-title-label"></div>
+    <div id="slide-label">01 / 08</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Per-slide durations — total = 60 000ms (1 minute)
+  // Cover(5) Problem(7) Features(8) WA(7) Numbers(6) Mobile(6) Compare(7) Mockups(8) CTA(6)
+  const SLIDE_DURATIONS = [5000, 7000, 8000, 7000, 6000, 6000, 7000, 8000, 6000];
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const N = slides.length;
+  let current = 0;
+  let playing = true;
+  let startTime = null;
+  let elapsed = 0;
+  let rafId = null;
+  let chatDone = false;
+
+  // ── BUILD UI ────────────────────────────────────────
+  const dotRow = document.getElementById('dot-row');
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'sdot ctrl-btn' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    d.addEventListener('click', () => goTo(i));
+    dotRow.appendChild(d);
+  });
+
+  const segMarkers = document.getElementById('segment-markers');
+  for (let i = 1; i < N; i++) {
+    const m = document.createElement('div');
+    m.className = 'seg-mark';
+    m.style.left = (i / N * 100) + '%';
+    segMarkers.appendChild(m);
+  }
+
+  const btnPlay = document.getElementById('btn-play');
+  const iconPlay = document.getElementById('icon-play');
+  const iconPause = document.getElementById('icon-pause');
+  const tlFill = document.getElementById('timeline-fill');
+  const tlSeg = document.getElementById('timeline-segment-fill');
+  const label = document.getElementById('slide-label');
+  const titleLabel = document.getElementById('slide-title-label');
+  const tl = document.getElementById('timeline');
+
+  // ── SLIDE TRANSITION ────────────────────────────────
+  function goTo(idx, resetChat) {
+    if (idx === current && !resetChat) return;
+    const prev = current;
+    current = ((idx % N) + N) % N;
+
+    slides[prev].classList.remove('active');
+    slides[prev].classList.add('exit');
+    setTimeout(() => slides[prev].classList.remove('exit'), 650);
+
+    slides[current].classList.add('active');
+    document.dispatchEvent(new CustomEvent('slidechange', { detail: current }));
+
+    updateUI();
+    elapsed = 0;
+    startTime = playing ? performance.now() : null;
+
+    if (current === 3) {
+      animateChat();
+    }
+  }
+
+  function updateUI() {
+    const dots = dotRow.querySelectorAll('.sdot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    label.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
+    titleLabel.textContent = slides[current].dataset.title || '';
+    const globalPct = (current / N) * 100;
+    tlFill.style.width = globalPct + '%';
+    tlSeg.style.width = '0%';
+    document.getElementById('timeline-scrubber').style.left = globalPct + '%';
+  }
+
+  // ── RAF LOOP ────────────────────────────────────────
+  function tick(now) {
+    if (!playing) { rafId = null; return; }
+    if (!startTime) startTime = now;
+    elapsed = now - startTime;
+    const frac = Math.min(elapsed / SLIDE_DURATIONS[current], 1);
+    const segPct = ((current + frac) / N) * 100;
+    tlFill.style.width = segPct + '%';
+    tlSeg.style.width = (frac / N * 100 + current / N * 100 - current / N * 100) + '%';
+
+    // per-slide segment fill
+    const segStart = (current / N) * 100;
+    const segWidth = (1 / N) * 100;
+    tlSeg.style.left = segStart + '%';
+    tlSeg.style.width = (frac * segWidth) + '%';
+    tlFill.style.width = (segStart + frac * segWidth) + '%';
+    document.getElementById('timeline-scrubber').style.left = (segStart + frac * segWidth) + '%';
+
+    if (frac >= 1) {
+      goTo(current + 1);
+    } else {
+      rafId = requestAnimationFrame(tick);
+    }
+  }
+
+  // ── PLAY / PAUSE ────────────────────────────────────
+  function setPlaying(v) {
+    playing = v;
+    iconPlay.style.display = playing ? 'none' : '';
+    iconPause.style.display = playing ? '' : 'none';
+    if (playing) {
+      startTime = performance.now() - elapsed;
+      rafId = requestAnimationFrame(tick);
+    } else {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+  }
+
+  btnPlay.addEventListener('click', () => setPlaying(!playing));
+  document.getElementById('btn-prev').addEventListener('click', () => { goTo(current - 1); });
+  document.getElementById('btn-next').addEventListener('click', () => { goTo(current + 1); });
+
+  // keyboard
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+    if (e.code === 'ArrowRight') goTo(current + 1);
+    if (e.code === 'ArrowLeft') goTo(current - 1);
+  });
+
+  // timeline click/drag
+  tl.addEventListener('click', e => {
+    const rect = tl.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    const targetSlide = Math.floor(pct * N);
+    goTo(Math.max(0, Math.min(N - 1, targetSlide)));
+  });
+
+  // ── WHATSAPP CHAT ANIMATION ─────────────────────────
+  function animateChat() {
+    const msgs = Array.from(document.querySelectorAll('#waChat .wa-msg'));
+    const typing = document.getElementById('waTyping');
+    msgs.forEach(m => { m.classList.remove('show'); });
+    typing.classList.remove('show');
+
+    msgs.forEach((msg, i) => {
+      const isOut = msg.classList.contains('out');
+      if (isOut) {
+        setTimeout(() => { typing.classList.add('show'); }, i * 680 + 280);
+        setTimeout(() => { typing.classList.remove('show'); msg.classList.add('show'); }, i * 680 + 860);
+      } else {
+        setTimeout(() => msg.classList.add('show'), i * 680 + 480);
+      }
+    });
+  }
+
+  // ── COUNT-UP NUMBERS (slide 4) ───────────────────────
+  const countTargets = [
+    { el: null, value: 90, suffix: '%', dur: 1400 },
+    { el: null, value: 3,  suffix: 's', dur: 800  },
+    { el: null, value: 2,  suffix: 'M+', dur: 1200 },
+    { el: null, value: 100,suffix: '%', dur: 1600 },
+    { el: null, value: 0,  suffix: 's', dur: 600  },
+    { el: null, value: null, suffix: '∞', dur: 0  },
+  ];
+  const numBigs = document.querySelectorAll('.num-big');
+  numBigs.forEach((el, i) => { if (countTargets[i]) countTargets[i].el = el; });
+
+  function runCountUp() {
+    countTargets.forEach(cfg => {
+      if (!cfg.el) return;
+      if (cfg.value === null) { cfg.el.textContent = '∞'; return; }
+      const start = performance.now();
+      const from = 0;
+      const to = cfg.value;
+      function frame(now) {
+        const p = Math.min((now - start) / cfg.dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        cfg.el.textContent = Math.round(from + (to - from) * eased) + cfg.suffix;
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+
+  // ── INIT ────────────────────────────────────────────
+  slides[0].classList.add('active');
+  updateUI();
+  setPlaying(true);
+  tlSeg.style.left = '0%';
+
+  // run countUp if starting on numbers slide, or hook into transitions
+  let mkpFloatTimer = null;
+  document.addEventListener('slidechange', e => {
+    if (e.detail === 4) setTimeout(runCountUp, 400);
+    // Remove float class whenever we leave mockups slide
+    clearTimeout(mkpFloatTimer);
+    document.querySelectorAll('.clay-wrap').forEach(p => p.classList.remove('floating'));
+    // Add float class after entrance springs settle (~1.4s)
+    if (e.detail === 7) {
+      mkpFloatTimer = setTimeout(() => {
+        document.querySelectorAll('.clay-wrap').forEach(p => p.classList.add('floating'));
+      }, 1400);
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

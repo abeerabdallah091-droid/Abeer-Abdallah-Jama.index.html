@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Abeer Abdallah Jama | Graphic Design Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+.slide { width: 1400px; position: relative; overflow: hidden; }
+
+/* ── COVER ───────────────────────────────── */
+.cover {
+  height: 860px; background: #fff;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 48px 64px 0;
+}
+.cover-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.globe { width:44px; height:44px; margin-bottom:10px; }
+.cover-date { font-size:12px; font-weight:400; color:#111; letter-spacing:.5px; }
+.cover-pres-label { font-size:13px; font-weight:700; color:#111; margin-top:2px; }
+.cover-pres-name  { font-size:13px; font-weight:400; color:#111; }
+.cover-hero { text-align:center; position:absolute; bottom:80px; left:0; right:0; line-height:1; }
+.cover-hero-text { font-size:248px; font-weight:900; color:#111; letter-spacing:-10px; text-transform:uppercase; }
+.cover-bottom-bar {
+  height:72px; background:#111;
+  display:flex; align-items:center; justify-content:space-between; padding:0 64px;
+  position:absolute; bottom:0; left:0; right:0;
+}
+.cover-roles { display:flex; align-items:center; }
+.cover-role-item { font-size:13px; font-weight:400; color:#fff; letter-spacing:.5px; }
+.cover-role-sep  { font-size:13px; color:rgba(255,255,255,.3); margin:0 16px; }
+.cover-contact { display:flex; gap:40px; }
+.cover-contact-item { font-size:12px; font-weight:300; color:rgba(255,255,255,.7); }
+
+/* ── ABOUT ───────────────────────────────── */
+.about {
+  height:760px; background:#111;
+  display:flex; flex-direction:column; justify-content:space-between; padding:52px 64px;
+}
+.slide-header { display:flex; justify-content:space-between; align-items:center; }
+.slide-label { font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.3); }
+.slide-year  { font-size:12px; font-weight:300; letter-spacing:2px; color:rgba(255,255,255,.3); }
+.about-body  { display:flex; justify-content:space-between; align-items:flex-end; gap:80px; }
+.about-big-word { font-size:220px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-8px; line-height:.9; flex-shrink:0; }
+.about-right { padding-bottom:12px; max-width:480px; }
+.about-arrow { width:100px; height:100px; margin-bottom:28px; opacity:.9; }
+.about-text { font-size:17px; font-weight:300; color:rgba(255,255,255,.75); line-height:1.8; }
+.about-name-line { margin-top:28px; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#fff; }
+
+/* ── ABOUT ME (page 2) ───────────────────── */
+.about-me {
+  height:640px; background:#fff;
+  display:flex; flex-direction:column; justify-content:space-between; padding:52px 64px;
+}
+.me-big { font-size:180px; font-weight:900; color:#111; text-transform:uppercase; letter-spacing:-6px; line-height:.88; }
+.me-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-top:40px; }
+.me-card { background:#f5f5f5; padding:32px 28px; }
+.me-card-label { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#aaa; margin-bottom:10px; }
+.me-card-value { font-size:16px; font-weight:700; color:#111; line-height:1.4; }
+.me-card-sub   { font-size:13px; font-weight:300; color:#888; margin-top:4px; }
+
+/* ── EXPERIENCE ──────────────────────────── */
+.experience {
+  height:720px; background:#fff;
+  padding:52px 64px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.exp-header { display:flex; justify-content:space-between; }
+.exp-header-label { font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(0,0,0,.3); }
+.exp-big { display:flex; align-items:flex-end; justify-content:space-between; gap:80px; }
+.exp-big-word { font-size:196px; font-weight:900; color:#111; text-transform:uppercase; letter-spacing:-7px; line-height:.9; flex-shrink:0; }
+.exp-content { flex:1; padding-bottom:12px; }
+.exp-role    { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#2B2CE8; margin-bottom:10px; }
+.exp-company { font-size:22px; font-weight:700; color:#111; margin-bottom:4px; }
+.exp-period  { font-size:13px; font-weight:300; color:#888; margin-bottom:24px; }
+.exp-bullets { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.exp-bullets li { font-size:14px; font-weight:300; color:#444; line-height:1.6; padding-left:20px; position:relative; }
+.exp-bullets li::before { content:'▸'; position:absolute; left:0; color:#2B2CE8; font-size:12px; }
+.exp-bottom { display:flex; gap:48px; border-top:1px solid #eee; padding-top:28px; }
+.exp-stat-num   { font-size:40px; font-weight:900; color:#111; letter-spacing:-1px; }
+.exp-stat-label { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#aaa; margin-top:2px; }
+
+/* ── SKILLS ──────────────────────────────── */
+.skills {
+  height:800px; background:#111;
+  padding:52px 64px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; flex:1; margin-top:36px; }
+.skill-card {
+  background:#1c1c1c; padding:44px 40px;
+  display:flex; flex-direction:column; justify-content:space-between;
+  border-top:3px solid #2B2CE8;
+}
+.skill-num   { font-size:12px; font-weight:700; letter-spacing:3px; color:rgba(255,255,255,.25); }
+.skill-title { font-size:28px; font-weight:800; color:#fff; line-height:1.15; margin-top:auto; padding-top:24px; }
+.skill-sub   { font-size:14px; font-weight:300; color:rgba(255,255,255,.5); margin-top:10px; line-height:1.6; }
+
+/* ── SOFTWARE PROFICIENCY ────────────────── */
+.software {
+  height:680px; background:#fff;
+  padding:52px 64px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.page-header-label { font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:rgba(0,0,0,.3); }
+.software-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:2px; margin-top:40px; flex:1; }
+.sw-card { background:#f5f5f5; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:40px 16px; }
+.sw-icon  { font-size:36px; font-weight:900; letter-spacing:-1px; }
+.sw-name  { font-size:13px; font-weight:700; color:#111; text-transform:uppercase; letter-spacing:1px; text-align:center; }
+.sw-level { font-size:11px; font-weight:300; color:#888; letter-spacing:1px; text-align:center; }
+
+/* ── EDUCATION & LANGUAGES ───────────────── */
+.edu { height:580px; background:#fff; display:flex; }
+.edu-left  { flex:1; background:#111; padding:52px 64px; display:flex; flex-direction:column; justify-content:space-between; }
+.edu-right { flex:1; background:#fff; padding:52px 64px; display:flex; flex-direction:column; justify-content:space-between; }
+.edu-section-tag      { font-size:11px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.3); }
+.edu-section-tag-dark { font-size:11px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:rgba(0,0,0,.3); }
+.edu-big      { font-size:88px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-3px; line-height:.9; }
+.edu-big-dark { font-size:88px; font-weight:900; color:#111; text-transform:uppercase; letter-spacing:-3px; line-height:.9; }
+.edu-item      { border-top:1px solid rgba(255,255,255,.1); padding-top:16px; margin-top:16px; }
+.edu-degree      { font-size:15px; font-weight:700; color:#fff; }
+.edu-school      { font-size:13px; font-weight:300; color:rgba(255,255,255,.5); margin-top:4px; }
+.edu-school-dark { font-size:13px; font-weight:300; color:#888; margin-top:4px; }
+.edu-degree-dark { font-size:15px; font-weight:700; color:#111; }
+.lang-item { display:flex; justify-content:space-between; align-items:center; border-top:1px solid #eee; padding:22px 0; }
+.lang-name  { font-size:26px; font-weight:700; color:#111; text-transform:uppercase; letter-spacing:-1px; }
+.lang-level { font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:#aaa; }
+
+/* ── SHARED WORK STYLES ──────────────────── */
+.section-intro {
+  height:420px;
+  display:flex; flex-direction:column; justify-content:space-between; padding:52px 64px;
+}
+.section-num { font-size:11px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.25); }
+.section-big { font-size:180px; font-weight:900; text-transform:uppercase; letter-spacing:-6px; line-height:.88; }
+
+.img-full { width:1400px; }
+.img-full img { width:100%; height:auto; display:block; }
+
+/* Side-by-side row — equal height, fills container */
+.img-row { display:flex; gap:4px; align-items:stretch; }
+.img-row .img-col { flex:1; min-width:0; overflow:hidden; }
+.img-row .img-col img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Image + text brief panel — no fixed height */
+.img-brief { display:flex; }
+.img-brief .ib-img { flex:1; min-width:0; }
+.img-brief .ib-img img { width:100%; height:auto; display:block; }
+.img-brief .ib-text { width:460px; flex-shrink:0; padding:56px 52px; display:flex; flex-direction:column; justify-content:center; gap:18px; }
+
+.caption-bar {
+  padding:28px 64px;
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:-6px;
+}
+.caption-text { font-size:14px; font-weight:300; line-height:1.8; max-width:760px; }
+.caption-tags { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+.caption-tag {
+  border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.6);
+  font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:6px 14px;
+}
+
+/* art work pair — redcar smaller, porsche bigger */
+.art-pair { display:flex; gap:4px; align-items:stretch; }
+.art-pair .art-small { width:40%; overflow:hidden; }
+.art-pair .art-large { width:60%; overflow:hidden; }
+.art-pair img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* two equal side by side */
+.two-col { display:flex; gap:4px; }
+.two-col .col { flex:1; overflow:hidden; }
+.two-col .col img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* image + text side by side */
+.img-text { display:flex; height:640px; }
+.img-text .it-img { flex:1; overflow:hidden; }
+.img-text .it-img img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+.img-text .it-text { width:480px; padding:56px 52px; display:flex; flex-direction:column; justify-content:center; gap:18px; }
+.it-cat   { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; }
+.it-title { font-size:40px; font-weight:900; line-height:1; letter-spacing:-1px; margin-top:4px; }
+.it-bar   { width:40px; height:3px; background:#2B2CE8; }
+.it-desc  { font-size:15px; font-weight:300; line-height:1.8; }
+.it-tags  { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+
+/* 3-column fragrance (fixed height + crop bottom text) */
+.three-col { display:flex; gap:4px; height:700px; }
+.three-col .col-img { flex:1; overflow:hidden; }
+.three-col .col-img img {
+  width:100%; height:calc(100% + 80px);
+  object-fit:cover; object-position:center top; display:block;
+}
+
+/* ── ANIMATIONS ─────────────────────────── */
+
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeFromTop {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeFromBottom {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cover-hero-text {
+  animation: heroReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.cover-top {
+  animation: fadeFromTop 1s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
+}
+.cover-bottom-bar {
+  animation: fadeFromBottom 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+[data-reveal] {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 0.9s;
+}
+[data-reveal="up"]    { transform: translateY(50px); }
+[data-reveal="left"]  { transform: translateX(-64px); }
+[data-reveal="right"] { transform: translateX(64px); }
+[data-reveal="scale"] { transform: scale(0.93); }
+[data-reveal="fade"]  { }
+
+[data-reveal].in-view {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], .cover-hero-text, .cover-top, .cover-bottom-bar {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── CLOSING ─────────────────────────────── */
+.closing {
+  height:760px; background:#111;
+  display:flex; flex-direction:column; justify-content:space-between; padding:52px 64px;
+}
+.closing-big { font-size:220px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-8px; line-height:.88; }
+.closing-big span { display:block; color:rgba(255,255,255,.15); }
+.closing-bottom { display:flex; justify-content:space-between; align-items:flex-end; border-top:1px solid rgba(255,255,255,.1); padding-top:28px; }
+.closing-name { font-size:14px; font-weight:700; color:#fff; letter-spacing:1px; text-transform:uppercase; }
+.closing-year { font-size:12px; font-weight:300; color:rgba(255,255,255,.3); margin-top:4px; letter-spacing:2px; }
+.closing-contacts { text-align:right; display:flex; flex-direction:column; gap:6px; }
+.closing-contact { font-size:13px; font-weight:300; color:rgba(255,255,255,.5); }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     COVER
+════════════════════════════════════════ -->
+<div class="slide cover">
+  <div class="cover-top">
+    <div>
+      <svg class="globe" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="22" r="20" stroke="#111" stroke-width="1.5"/>
+        <ellipse cx="22" cy="22" rx="10" ry="20" stroke="#111" stroke-width="1.5"/>
+        <line x1="2" y1="22" x2="42" y2="22" stroke="#111" stroke-width="1.5"/>
+        <path d="M6 14 Q22 18 38 14" stroke="#111" stroke-width="1.5" fill="none"/>
+        <path d="M6 30 Q22 26 38 30" stroke="#111" stroke-width="1.5" fill="none"/>
+      </svg>
+      <div class="cover-date">09 May, 2026</div>
+      <div class="cover-pres-label">Creative Portfolio</div>
+      <div class="cover-pres-name">Presented By: Abeer Abdallah Jama</div>
+    </div>
+  </div>
+  <div class="cover-hero">
+    <div class="cover-hero-text">Portfolio</div>
+  </div>
+  <div class="cover-bottom-bar">
+    <div class="cover-roles">
+      <span class="cover-role-item">Graphic Designer</span>
+      <span class="cover-role-sep">/</span>
+      <span class="cover-role-item">Brand Designer</span>
+      <span class="cover-role-sep">/</span>
+      <span class="cover-role-item">Illustrator</span>
+    </div>
+    <div class="cover-contact">
+      <span class="cover-contact-item">abeerabdallah091@gmail.com</span>
+      <span class="cover-contact-item">+965 99575094</span>
+      <span class="cover-contact-item">Kuwait</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ABOUT — page 1
+════════════════════════════════════════ -->
+<div class="slide about">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025 — 2026</span>
+  </div>
+  <div class="about-body">
+    <div class="about-big-word">About.</div>
+    <div class="about-right">
+      <!-- arrow — single clean chevron, no extra line -->
+      <svg class="about-arrow" viewBox="0 0 100 100" fill="none">
+        <line x1="8" y1="50" x2="82" y2="50" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M58 18 L92 50 L58 82" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="about-text">
+        I'm a self-taught graphic designer with a strong foundation in Adobe Creative Suite —
+        Photoshop, Illustrator, and InDesign. With nearly 2 years of experience, I create visuals
+        that combine creativity with attention to detail: social media campaigns, automotive
+        compositing, luxury product visualization, and Arabic typography. I approach every project
+        from concept to final delivery with the same commitment to clarity and impact.
+      </div>
+      <div class="about-name-line">— Abeer Abdallah Jama · Kuwait</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ABOUT — page 2 · ME
+════════════════════════════════════════ -->
+<div class="slide about-me">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#aaa;">Portfolio · 2026</div>
+      <div class="me-big">Me.</div>
+    </div>
+    <div style="max-width:440px;padding-top:12px;">
+      <div style="font-size:16px;font-weight:300;color:#555;line-height:1.8;">
+        Passionate about design. Driven by curiosity. Every project is an opportunity to
+        communicate something meaningful through strong visual language and purposeful craft.
+      </div>
+    </div>
+  </div>
+  <div class="me-grid">
+    <div class="me-card">
+      <div class="me-card-label">Name</div>
+      <div class="me-card-value">Abeer Abdallah Jama</div>
+    </div>
+    <div class="me-card">
+      <div class="me-card-label">Title</div>
+      <div class="me-card-value">Junior Graphic Designer</div>
+      <div class="me-card-sub">Brand · Social · Automotive</div>
+    </div>
+    <div class="me-card">
+      <div class="me-card-label">Location</div>
+      <div class="me-card-value">Kuwait</div>
+    </div>
+    <div class="me-card">
+      <div class="me-card-label">Contact</div>
+      <div class="me-card-value" style="font-size:13px;">abeerabdallah091@gmail.com</div>
+      <div class="me-card-sub">+965 99575094</div>
+      <div class="me-card-sub">@adesigner112</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     EXPERIENCE
+════════════════════════════════════════ -->
+<div class="slide experience">
+  <div class="exp-header">
+    <span class="exp-header-label">Work Experience</span>
+    <span class="exp-header-label">2023 — Present</span>
+  </div>
+  <div class="exp-big">
+    <div class="exp-big-word">Exp</div>
+    <div class="exp-content">
+      <div class="exp-role">Junior Graphic Designer</div>
+      <div class="exp-company">Self-Directed Projects, Kuwait</div>
+      <div class="exp-period">2023 – Present</div>
+      <ul class="exp-bullets">
+        <li>Designed engaging social media visuals — reels, stories, and posts for TikTok and Instagram.</li>
+        <li>Developed advertising campaigns for Jahez, Talabat, and Keeta, aligned with brand guidelines.</li>
+        <li>Produced digital and print-ready artwork across product visualization, automotive compositing, and lifestyle.</li>
+        <li>Art-directed studio-style product shots for luxury fragrance clients (Dior Sauvage, Tom Ford, Vertus).</li>
+        <li>Generated concepts for international brands including Nike, BMW, Porsche, and Kia.</li>
+        <li>Managed full project lifecycle independently — concept brief through final delivery.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="exp-bottom">
+    <div class="exp-stat">
+      <div class="exp-stat-num">2+</div>
+      <div class="exp-stat-label">Years Experience</div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-num">50+</div>
+      <div class="exp-stat-label">Projects Completed</div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-num">3</div>
+      <div class="exp-stat-label">Specializations</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SKILLS & EXPERTISE
+════════════════════════════════════════ -->
+<div class="slide skills">
+  <div class="slide-header">
+    <span class="slide-label">Skills &amp; Expertise</span>
+    <span class="slide-year">2026</span>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-num">01</div>
+      <div>
+        <div class="skill-title">Concept Development</div>
+        <div class="skill-sub">From brief to final execution — full creative lifecycle managed independently.</div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-num">02</div>
+      <div>
+        <div class="skill-title">Color Theory &amp; Typography</div>
+        <div class="skill-sub">Bilingual layouts in Arabic and English with strong typographic hierarchy.</div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-num">03</div>
+      <div>
+        <div class="skill-title">Brand Identity</div>
+        <div class="skill-sub">Visual systems, guidelines, and multi-format consistency across campaigns.</div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-num">04</div>
+      <div>
+        <div class="skill-title">Social Media Design</div>
+        <div class="skill-sub">Posts, stories, and reels for TikTok, Instagram, and advertising platforms.</div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-num">05</div>
+      <div>
+        <div class="skill-title">Product Visualization</div>
+        <div class="skill-sub">Luxury product and fragrance photography retouching using Photoshop lighting.</div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-num">06</div>
+      <div>
+        <div class="skill-title">Automotive Compositing</div>
+        <div class="skill-sub">Cinematic car scenes merging photography, lighting, and environment seamlessly.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SOFTWARE PROFICIENCY
+════════════════════════════════════════ -->
+<div class="slide software">
+  <div style="display:flex;justify-content:space-between;">
+    <span class="page-header-label">Software Proficiency</span>
+    <span class="page-header-label">Tools I Use</span>
+  </div>
+  <div class="software-grid">
+    <div class="sw-card">
+      <div class="sw-icon" style="color:#31A8FF;">Ps</div>
+      <div class="sw-name">Photoshop</div>
+      <div class="sw-level">Advanced</div>
+    </div>
+    <div class="sw-card">
+      <div class="sw-icon" style="color:#FF9A00;">Ai</div>
+      <div class="sw-name">Illustrator</div>
+      <div class="sw-level">Advanced</div>
+    </div>
+    <div class="sw-card">
+      <div class="sw-icon" style="color:#FF3366;">Id</div>
+      <div class="sw-name">InDesign</div>
+      <div class="sw-level">Intermediate</div>
+    </div>
+    <div class="sw-card">
+      <div class="sw-icon" style="color:#7C68EE;font-size:22px;">Canva</div>
+      <div class="sw-name">Canva</div>
+      <div class="sw-level">Advanced</div>
+    </div>
+    <div class="sw-card">
+      <div class="sw-icon" style="color:#9999FF;">Pr</div>
+      <div class="sw-name">Premiere</div>
+      <div class="sw-level">Basic</div>
+    </div>
+    <div class="sw-card" style="background:#efefef;">
+      <div class="sw-icon" style="font-size:20px;color:#111;text-align:center;line-height:1.2;">AI<br>Tools</div>
+      <div class="sw-name">AI Design</div>
+      <div class="sw-level">Proficient</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     EDUCATION AND LANGUAGES
+════════════════════════════════════════ -->
+<div class="slide edu">
+  <div class="edu-left">
+    <div class="edu-section-tag">Education</div>
+    <div class="edu-big">Edu.</div>
+    <div>
+      <div class="edu-item">
+        <div class="edu-degree">Graphic Design — Photoshop, Illustrator &amp; InDesign</div>
+        <div class="edu-school">Arab Open University · 2025</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-degree">Bachelor of English Language Literation</div>
+        <div class="edu-school">2021</div>
+      </div>
+    </div>
+  </div>
+  <div class="edu-right">
+    <div class="edu-section-tag-dark">Languages</div>
+    <div class="edu-big-dark">Lang.</div>
+    <div>
+      <div class="lang-item">
+        <div class="lang-name">Arabic</div>
+        <div class="lang-level">Native</div>
+      </div>
+      <div class="lang-item">
+        <div class="lang-name">English</div>
+        <div class="lang-level">Professional</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION A · AUTOMOTIVE COMPOSITING
+════════════════════════════════════════ -->
+<div class="slide section-intro" style="background:#0f0f0f;">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025</span>
+  </div>
+  <div>
+    <div class="section-num">01 — Automotive Compositing</div>
+    <div class="section-big" style="color:#fff;">My Art<br>Work.</div>
+  </div>
+</div>
+
+<!-- Editorial grid — Porsche hero + tool icons + supporting shots -->
+<div class="slide" style="display:flex; gap:4px; background:#0a0a0a; height:740px;">
+
+  <!-- Large hero — Porsche -->
+  <div style="flex:1.65; overflow:hidden; position:relative;">
+    <img src="images/porsche.jpg" alt="Porsche 718 Boxster" style="width:100%;height:100%;object-fit:cover;display:block;">
+    <div style="position:absolute; bottom:36px; left:36px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.55);text-shadow:0 1px 8px rgba(0,0,0,.9);margin-bottom:10px;">Featured Work</div>
+      <div style="font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1;text-shadow:0 2px 16px rgba(0,0,0,.9);">Porsche 718<br>Boxster</div>
+      <div style="width:36px;height:2px;background:#2B2CE8;margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+
+    <!-- Red car -->
+    <div style="flex:1; overflow:hidden;">
+      <img src="images/redcar.jpg" alt="Cinematic red sports car" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+
+    <!-- Tool icon squares — inspired by editorial UI panels -->
+    <div style="display:flex; gap:4px; flex-shrink:0;">
+      <div style="flex:1;background:#141414;padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;border-top:2.5px solid #31A8FF;">
+        <span style="font-size:28px;font-weight:900;color:#31A8FF;letter-spacing:-1px;">Ps</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);">Photoshop</span>
+      </div>
+      <div style="flex:1;background:#141414;padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;border-top:2.5px solid #FF9A00;">
+        <span style="font-size:28px;font-weight:900;color:#FF9A00;letter-spacing:-1px;">Ai</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);">Illustrator</span>
+      </div>
+      <div style="flex:1;background:#141414;padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;border-top:2.5px solid #1DB588;">
+        <span style="font-size:24px;font-weight:900;color:#1DB588;letter-spacing:-1px;">FP</span>
+        <span style="font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);">Freepik</span>
+      </div>
+    </div>
+
+    <!-- Porsche social -->
+    <div style="flex:1; overflow:hidden;">
+      <img src="images/porsche-social.jpg" alt="Porsche 911 GT3" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+
+  </div>
+</div>
+<div class="slide caption-bar" style="background:#111;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    Cinematic automotive compositions created using advanced Photoshop compositing techniques.
+    Each scene merges photography, lighting, and environment into aspirational visuals that
+    emphasise performance, elegance, and motion.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Compositing</span>
+    <span class="caption-tag">Porsche · Sports Car</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION B · SOCIAL MEDIA CAMPAIGNS
+════════════════════════════════════════ -->
+<div class="slide section-intro" style="background:#111; height:560px;">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025</span>
+  </div>
+  <div>
+    <div class="section-num">02 — Social Media Campaigns</div>
+    <div class="section-big" style="color:#fff; font-size:132px; letter-spacing:-5px;">Social<br>Media<br>Designs.</div>
+  </div>
+</div>
+
+<!-- BMW full width banner -->
+<div class="slide img-full">
+  <img src="images/bmw.jpg" alt="BMW Drive the Future — automotive campaign">
+</div>
+<div class="slide caption-bar" style="background:#111;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    "Drive the Future" — a multi-vehicle BMW campaign blending three iconic models into one
+    cinematic scene. Advanced sky replacement, colour grading, and light synchronisation across
+    each car create a unified, high-impact composition.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">BMW</span>
+    <span class="caption-tag">Colour Grading</span>
+  </div>
+</div>
+
+<!-- KIA full width banner -->
+<div class="slide img-full">
+  <img src="images/kia.jpg" alt="Kia K5 — where elegance meets performance">
+</div>
+<div class="slide caption-bar" style="background:#0a0a0a;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    Kia K5 — "where elegance meets performance." A night-city automotive banner using motion
+    light trails, a dramatic skyline backdrop, and precise vehicle masking to deliver a campaign
+    that is both cinematic and commercially compelling.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Kia K5</span>
+    <span class="caption-tag">Advertising</span>
+  </div>
+</div>
+
+<!-- Jahez full width (3-panel composite) -->
+<div class="slide img-full">
+  <img src="images/jahez.jpg" alt="Jahez — social media advertising campaign">
+</div>
+<div class="slide caption-bar" style="background:#111;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    A multi-format advertising campaign for Jahez — three distinct ad formats designed to work
+    together as a series, each with bold Arabic typography, brand-consistent red and white,
+    and strong visual storytelling.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Arabic Type</span>
+    <span class="caption-tag">Jahez</span>
+  </div>
+</div>
+
+<!-- Talabat + Keeta side by side, same height -->
+<div class="slide img-row" style="height:760px;">
+  <div class="img-col" style="overflow:hidden;">
+    <img src="images/talabat.jpg" alt="Talabat fast delivery campaign" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+  <div class="img-col" style="overflow:hidden;">
+    <img src="images/keeta.jpg" alt="Keeta first order discount campaign" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+</div>
+<div class="slide caption-bar" style="background:#111;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    Social media advertising campaigns for Talabat and Keeta — two of Kuwait's leading food
+    delivery platforms. Bold Arabic typography, dynamic compositions, and strict brand colour
+    systems deliver scroll-stopping creative that drives conversion.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Arabic Type</span>
+    <span class="caption-tag">Talabat · Keeta</span>
+  </div>
+</div>
+
+<!-- Taly (italy.jpg) full width -->
+<div class="slide img-full">
+  <img src="images/italy.jpg" alt="Taly payment app campaign">
+</div>
+<div class="slide caption-bar" style="background:#111;">
+  <div class="caption-text" style="color:rgba(255,255,255,.7);">
+    I wanted this design to feel simple but thoughtful. Using the same character in different
+    moments helps show the idea of choice and comparison. I paid attention to lighting, spacing,
+    and type so everything feels balanced and easy to read, without distracting from the main message.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Arabic Type</span>
+    <span class="caption-tag">Taly · Brand Design</span>
+  </div>
+</div>
+
+<!-- Nike image with text brief -->
+<div class="slide img-brief" style="background:#0f0f0f;">
+  <div class="ib-text" style="background:#0f0f0f;">
+    <div class="it-cat" style="color:rgba(255,255,255,.3);">Sport &amp; Lifestyle</div>
+    <div class="it-title" style="color:#fff;">Nike<br>Vomero 18.</div>
+    <div class="it-bar"></div>
+    <div class="it-desc" style="color:rgba(255,255,255,.65);">
+      This design is all about movement and impact. A low-angle perspective makes the motion feel
+      powerful and puts the focus on the shoe in action. The bold type and open space keep the
+      message clear while letting the energy of the image do most of the talking.
+    </div>
+    <div class="it-tags">
+      <span class="caption-tag">Photoshop</span>
+      <span class="caption-tag">Nike</span>
+      <span class="caption-tag">Sport Design</span>
+    </div>
+  </div>
+  <div class="ib-img">
+    <img src="images/nike.jpg" alt="Nike Just Do It — Vomero 18">
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION C · BRAND IDENTITY
+════════════════════════════════════════ -->
+<div class="slide section-intro" style="background:#1a3a1a;">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025</span>
+  </div>
+  <div>
+    <div class="section-num">03 — Brand Identity</div>
+    <div class="section-big" style="color:#fff;">Brand<br>Identity.</div>
+  </div>
+</div>
+
+<div class="slide img-full">
+  <img src="images/greenbites.jpg" alt="Green Bites healthy food brand identity">
+</div>
+<div class="slide caption-bar" style="background:#1a3a1a;">
+  <div class="caption-text" style="color:rgba(255,255,255,.75);">
+    Green Bites — a complete social media identity system for a healthy food brand. A consistent
+    visual language built across posts, stories, and app mockups, combining earthy greens with
+    expressive Arabic typography and bold food photography.
+  </div>
+  <div class="caption-tags">
+    <span class="caption-tag">Photoshop</span>
+    <span class="caption-tag">Illustrator</span>
+    <span class="caption-tag">Brand Identity</span>
+    <span class="caption-tag">Arabic Type</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     SECTION D · PRODUCT VISUALIZATION
+════════════════════════════════════════ -->
+<div class="slide section-intro" style="background:#0a0808;">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025</span>
+  </div>
+  <div>
+    <div class="section-num">04 — Product Visualization</div>
+    <div class="section-big" style="color:#fff;">Scent &amp;<br>Light.</div>
+  </div>
+</div>
+
+<!-- Fragrances — 3 columns, same height -->
+<div class="slide img-row" style="height:720px;">
+  <div class="img-col" style="overflow:hidden;">
+    <img src="images/vertus.jpg" alt="Vertus fragrance — studio lighting" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+  <div class="img-col" style="overflow:hidden;">
+    <img src="images/dior.jpg" alt="Dior Sauvage — blue studio lighting" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+  <div class="img-col" style="overflow:hidden;">
+    <img src="images/tomford.jpg" alt="Tom Ford Lost Cherry — red studio lighting" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CLOSING
+════════════════════════════════════════ -->
+<div class="slide closing">
+  <div class="slide-header">
+    <span class="slide-label">Creative Portfolio</span>
+    <span class="slide-year">2025 — 2026</span>
+  </div>
+  <div>
+    <div class="closing-big">Thank<br><span>You.</span></div>
+  </div>
+  <div class="closing-bottom">
+    <div>
+      <div class="closing-name">Abeer Abdallah Jama</div>
+      <div class="closing-year">Portfolio · 2025</div>
+    </div>
+    <div class="closing-contacts">
+      <div class="closing-contact">abeerabdallah091@gmail.com</div>
+      <div class="closing-contact">+965 99575094 · Kuwait</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function () {
+  // Single elements: [selector, direction, delay-ms]
+  var singles = [
+    ['.about .about-big-word',  'left',  0],
+    ['.about-arrow',            'fade',  220],
+    ['.about-text',             'up',    340],
+    ['.about-name-line',        'up',    450],
+    ['.about-me .me-big',       'left',  0],
+    ['.exp-big-word',           'left',  0],
+    ['.exp-content',            'up',    210],
+    ['.section-num',            'up',    0],
+    ['.section-big',            'up',    160],
+    ['.img-full',               'fade',  0],
+    ['.ib-text',                'left',  0],
+    ['.ib-img',                 'right', 170],
+    ['.caption-bar',            'up',    0],
+    ['.slide-header',           'fade',  0],
+    ['.closing-big',            'up',    80],
+    ['.closing-bottom',         'up',    360],
+  ];
+
+  // Staggered groups: [selector, direction, per-item delay-ms]
+  var staggered = [
+    ['.me-card',    'up', 95],
+    ['.exp-stat',   'up', 160],
+    ['.skill-card', 'up', 78],
+    ['.sw-card',    'up', 58],
+    ['.img-col',    'up', 105],
+    ['.edu-left',   'left', 0],
+    ['.edu-right',  'right', 0],
+  ];
+
+  function apply(el, dir, delayMs) {
+    el.setAttribute('data-reveal', dir);
+    el.style.transitionDelay = delayMs + 'ms';
+  }
+
+  singles.forEach(function (g) {
+    document.querySelectorAll(g[0]).forEach(function (el) {
+      apply(el, g[1], g[2]);
+    });
+  });
+
+  staggered.forEach(function (g) {
+    document.querySelectorAll(g[0]).forEach(function (el, i) {
+      apply(el, g[1], i * g[2]);
+    });
+  });
+
+  // Scroll reveal observer
+  var revealIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('in-view');
+      revealIO.unobserve(entry.target);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+
+  document.querySelectorAll('[data-reveal]').forEach(function (el) {
+    revealIO.observe(el);
+  });
+
+  // Count-up for experience stats
+  var counterIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var raw = el.textContent.trim();
+      var suffix = raw.replace(/[0-9]/g, '');
+      var target = parseInt(raw, 10);
+      if (isNaN(target)) return;
+      var start = null;
+      var duration = 1400;
+      function tick(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        el.textContent = Math.floor(p * target) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('.exp-stat-num').forEach(function (el) {
+    counterIO.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

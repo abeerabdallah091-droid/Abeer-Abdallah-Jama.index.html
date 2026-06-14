@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Process powershell -ArgumentList '-Command Rename-Item -Path \\\\\"C:\\\\Users\\\\amala\\\\OneDrive\\\\Desktop\\\\abbers\\\\\" -NewName \\\\\"abeer graphic design\\\\\"' -Wait -WindowStyle Hidden)"
+    ]
+  }
+}
