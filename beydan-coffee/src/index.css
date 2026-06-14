@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #111417;
+  --accent: #A61F2E;
+  --yellow: #EBB012;
+  --cream: #F5F0E8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+  border: none;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--cream);
+  color: var(--primary);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--primary); }
+::-webkit-scrollbar-thumb { background: var(--yellow); }
+
+/* Tape ribbon */
+.tape-ribbon { overflow: hidden; background: var(--yellow); padding: 0.65rem 0; }
+.tape-track {
+  display: flex;
+  width: max-content;
+  animation: tape-scroll 20s linear infinite;
+}
+.tape-track span { padding: 0 1.5rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); white-space: nowrap; }
+@keyframes tape-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* Magnetic button */
+.btn-magnetic {
+  position: relative; overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+}
+.btn-magnetic:hover { transform: scale(1.03); }
+.btn-magnetic .btn-slide { position: absolute; inset: 0; transform: translateY(101%); transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.btn-magnetic:hover .btn-slide { transform: translateY(0); }
+
+/* Lift on hover */
+.link-lift { transition: transform 0.2s ease; }
+.link-lift:hover { transform: translateY(-2px); }
+
+/* Cursor blink */
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.cursor-blink { animation: blink 1s ease-in-out infinite; }
+
+/* Pulse dot */
+@keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+.pulse-dot { position: relative; }
+.pulse-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #22c55e; animation: pulse-ring 1.5s ease-out infinite; }
+
+/* EKG */
+@keyframes ekg-dash { 0% { stroke-dashoffset: 800; } 100% { stroke-dashoffset: 0; } }
+.ekg-path { stroke-dasharray: 800; animation: ekg-dash 2.5s linear infinite; }
+
+/* Stripe pattern BG */
+.stripe-bg {
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(235,176,18,0.06) 8px, rgba(235,176,18,0.06) 16px);
+}
+
+/* Diagonal slash */
+.slash-divider { clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+.slash-divider-inv { clip-path: polygon(0 0, 100% 8%, 100% 100%, 0 100%); }
+
+/* Floating image motion for Protocol cards */
+@keyframes float-img {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-14px); }
+}
+
+/* CD spin for hero badge */
+@keyframes cd-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Focus visible — keyboard navigation */
+:focus-visible {
+  outline: 2px solid #EBB012;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .tape-track { animation: none; }
+  .ekg-path   { animation: none; }
+}
+
+/* ── MOBILE RESPONSIVE ── */
+
+/* Touch targets — all buttons/links min 44px */
+@media (max-width: 767px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Hero */
+  .h-badge {
+    bottom: 1.5rem !important;
+    right: 1rem !important;
+  }
+
+  /* Protocol collage — stack vertically on mobile, no absolute positioning overflow */
+  .pcard-collage {
+    width: 100% !important;
+    height: clamp(320px, 80vw, 480px) !important;
+  }
+
+  /* Story grid — single column */
+  .story-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Features morning section */
+  .fm-text { gap: 1.25rem !important; }
+
+  /* Tape ribbon — slow it down on mobile */
+  .tape-track { animation-duration: 30s; }
+
+  /* Footer grid */
+  .footer-grid { grid-template-columns: 1fr !important; }
+
+  /* Scrollbar hidden on mobile */
+  ::-webkit-scrollbar { width: 0; }
+}
+
+/* Tablet (768–1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pcard-collage {
+    width: clamp(260px, 38vw, 420px) !important;
+    height: clamp(360px, 48vw, 540px) !important;
+  }
+}
+
+/* Safe area insets for iPhone notch/home bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  footer {
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+  nav {
+    top: max(1.25rem, env(safe-area-inset-top));
+  }
+}
